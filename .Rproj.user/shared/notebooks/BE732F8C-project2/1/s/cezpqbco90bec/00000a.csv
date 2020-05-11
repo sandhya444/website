@@ -1,0 +1,6 @@
+"0",""
+"0","#checking assumptions of linearity "
+"0","#plot residuals on x axis against yhats "
+"0","stateresids<-statesfit$residuals"
+"0","yhat <- statesfit$fitted.values"
+"0","ggplot()+geom_point(aes(stateresids,yhat))"

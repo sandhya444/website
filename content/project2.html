@@ -1,0 +1,518 @@
+---
+title: "Project 2 (Modeling)"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+
+
+<p>##Sandhya Srinivasa, ss64834</p>
+<p>##Question 0: Introduction
+0. (5 pts) Introduce your dataset and each of your variables (or just your main variables if you have lots) in a paragraph. What are they measuring? How many observations?</p>
+<p>My dataset includes GDP, the governor, women’s weekly median earnings, men’s weekly median earnings, the region, and net immigration for each of the states in the US in 2018. The GDP variable (in millions of dollars) is a measure of economy for each of the states in 2018 and is essentially the gross domestic product. The dataset also includes the “governor” variable, which determines whether the governor was a Republican or a Democrat for each of the states in 2018. This variable will be used to create a new binary variable. The women’s weekly median earnings in 2018 is a measure of women’s income for each of the states, and the men’s weekly median earnings in 2018 is a measure of men’s income for each of the states. The region is a categorical variable that splits the states into four separate groups based on region (Northeastern, Midwestern, Western, and Southern). Lastly, the net immigration is the total amount of immigration that the states each received in 2018. Some of the net immigration values are negative because more people left the state then entered it. There are a total of 51 observations, and each of the individual variables also has 51 observations. I created this dataset by merging several different tables together becuase I wanted to examine the relationship between the variables. I have been learning in my class how women’s income influences the GDP, which can influence the ecoonomy of the entire country. I have also been interested in how immigration affects GDP, and have always wanted to observe how GDP differs in different states and regions. I also wanted to see if men and women’s income are different based on the region.</p>
+<p>##Sources:</p>
+<p><a href="https://www.bls.gov/regions/southwest/news-release/womensearnings_texas.htm" class="uri">https://www.bls.gov/regions/southwest/news-release/womensearnings_texas.htm</a>
+<a href="http://www.statsamerica.org/sip/rank_list.aspx?rank_label=pop21&amp;ct=S09" class="uri">http://www.statsamerica.org/sip/rank_list.aspx?rank_label=pop21&amp;ct=S09</a>
+<a href="https://apps.bea.gov/iTable/iTable.cfm?0=1200&amp;1=1&amp;2=200&amp;3=sic&amp;4=1&amp;5=xx&amp;6=-1&amp;7=-1&amp;8=-1&amp;9=70&amp;10=levels&amp;isuri=1&amp;reqid=70&amp;step=10#reqid=70&amp;step=10&amp;isuri=1&amp;7003=200&amp;7035=-1&amp;7004=naics&amp;7005=1&amp;7006=xx&amp;7036=-1&amp;7001=1200&amp;7002=1&amp;7090=70&amp;7007=-1&amp;7093=levels" class="uri">https://apps.bea.gov/iTable/iTable.cfm?0=1200&amp;1=1&amp;2=200&amp;3=sic&amp;4=1&amp;5=xx&amp;6=-1&amp;7=-1&amp;8=-1&amp;9=70&amp;10=levels&amp;isuri=1&amp;reqid=70&amp;step=10#reqid=70&amp;step=10&amp;isuri=1&amp;7003=200&amp;7035=-1&amp;7004=naics&amp;7005=1&amp;7006=xx&amp;7036=-1&amp;7001=1200&amp;7002=1&amp;7090=70&amp;7007=-1&amp;7093=levels</a> (I used this website to generate a table for GDP)
+<a href="https://en.wikipedia.org/wiki/List_of_regions_of_the_United_States" class="uri">https://en.wikipedia.org/wiki/List_of_regions_of_the_United_States</a><br />
+<a href="https://en.wikipedia.org/wiki/List_of_United_States_governors" class="uri">https://en.wikipedia.org/wiki/List_of_United_States_governors</a> (For states whose governors joined office after 2018, I manually searched for who the governor was in 2018 for those states on Wikipedia)</p>
+<p>##Creating Dataset</p>
+<pre class="r"><code>library(readxl)
+library(dplyr)
+earnings &lt;- read_excel(&quot;~/Desktop/Project2/earning.xlsx&quot;) 
+glimpse(earnings)</code></pre>
+<pre><code>## Observations: 51
+## Variables: 4
+## $ state &lt;chr&gt; &quot;Alabama&quot;, &quot;Alaska&quot;, &quot;Arizona&quot;,
+&quot;Arkansas&quot;, &quot;California&quot;, &quot;Colorado&quot;, &quot;Connecticut…
+## $ women &lt;dbl&gt; 688, 857, 762, 681, 876, 908, 923, 789,
+1259, 716, 744, 797, 702, 831, 726, 753, 7…
+## $ men &lt;dbl&gt; 922, 1081, 910, 809, 992, 1069, 1140, 982,
+1445, 867, 919, 965, 883, 1069, 910, 97…
+## $ region &lt;chr&gt; &quot;S&quot;, &quot;W.&quot;, &quot;W.&quot;, &quot;S&quot;, &quot;W.&quot;, &quot;W.&quot;, &quot;NE&quot;,
+&quot;S&quot;, &quot;S&quot;, &quot;S&quot;, &quot;S&quot;, &quot;W.&quot;, &quot;M_W&quot;, &quot;M_W&quot;, &quot;M…</code></pre>
+<pre class="r"><code>immigration &lt;- read_excel(&quot;~/Desktop/Project2/IMMIGRATION.xlsx&quot;) %&gt;% select(-...2)
+glimpse(immigration)</code></pre>
+<pre><code>## Observations: 51
+## Variables: 2
+## $ state &lt;chr&gt; &quot;Florida&quot;, &quot;California&quot;, &quot;Texas&quot;, &quot;New
+York&quot;, &quot;Massachusetts&quot;, &quot;Washingto…
+## $ net.immigration &lt;dbl&gt; 88678, 74028, 65044, 45753,
+28426, 24103, 21284, 19532, 19209, 15053, 150…</code></pre>
+<pre class="r"><code>combined &lt;- full_join(earnings, immigration, by = &quot;state&quot;)
+glimpse(combined)</code></pre>
+<pre><code>## Observations: 51
+## Variables: 5
+## $ state &lt;chr&gt; &quot;Alabama&quot;, &quot;Alaska&quot;, &quot;Arizona&quot;,
+&quot;Arkansas&quot;, &quot;California&quot;, &quot;Colorado&quot;, &quot;Co…
+## $ women &lt;dbl&gt; 688, 857, 762, 681, 876, 908, 923, 789,
+1259, 716, 744, 797, 702, 831, 72…
+## $ men &lt;dbl&gt; 922, 1081, 910, 809, 992, 1069, 1140, 982,
+1445, 867, 919, 965, 883, 1069…
+## $ region &lt;chr&gt; &quot;S&quot;, &quot;W.&quot;, &quot;W.&quot;, &quot;S&quot;, &quot;W.&quot;, &quot;W.&quot;, &quot;NE&quot;,
+&quot;S&quot;, &quot;S&quot;, &quot;S&quot;, &quot;S&quot;, &quot;W.&quot;, &quot;M_W&quot;, …
+## $ net.immigration &lt;dbl&gt; 2772, 659, 7782, 268, 74028,
+10523, 12323, 73, 2604, 88678, 15053, 5014, …</code></pre>
+<pre class="r"><code>gdp &lt;- read_excel(&quot;~/Desktop/Project2/gdpstate.xlsx&quot;) 
+glimpse(gdp)</code></pre>
+<pre><code>## Observations: 51
+## Variables: 2
+## $ state &lt;chr&gt; &quot;Alabama&quot;, &quot;Alaska&quot;, &quot;Arizona&quot;,
+&quot;Arkansas&quot;, &quot;California&quot;, &quot;Colorado&quot;, &quot;Connecticut&quot;…
+## $ gdp &lt;dbl&gt; 221735.5, 54734.1, 348297.1, 128418.9,
+2997732.8, 371749.6, 275726.9, 73481.3, 1406…</code></pre>
+<pre class="r"><code>governor&lt;- read_excel(&quot;~/Desktop/Project2/governor.xlsx&quot;) 
+glimpse(governor)</code></pre>
+<pre><code>## Observations: 51
+## Variables: 2
+## $ state &lt;chr&gt; &quot;Alabama&quot;, &quot;Alaska&quot;, &quot;Arizona&quot;,
+&quot;Arkansas&quot;, &quot;California&quot;, &quot;Colorado&quot;, &quot;Connectic…
+## $ governor &lt;chr&gt; &quot;Republican&quot;, &quot;Republican&quot;,
+&quot;Republican&quot;, &quot;Republican&quot;, &quot;Democrat&quot;, &quot;Democrat&quot;, …</code></pre>
+<pre class="r"><code>combined1 &lt;- full_join(gdp, governor, by = &quot;state&quot;)
+glimpse(combined1)</code></pre>
+<pre><code>## Observations: 51
+## Variables: 3
+## $ state &lt;chr&gt; &quot;Alabama&quot;, &quot;Alaska&quot;, &quot;Arizona&quot;,
+&quot;Arkansas&quot;, &quot;California&quot;, &quot;Colorado&quot;, &quot;Connectic…
+## $ gdp &lt;dbl&gt; 221735.5, 54734.1, 348297.1, 128418.9,
+2997732.8, 371749.6, 275726.9, 73481.3, 1…
+## $ governor &lt;chr&gt; &quot;Republican&quot;, &quot;Republican&quot;,
+&quot;Republican&quot;, &quot;Republican&quot;, &quot;Democrat&quot;, &quot;Democrat&quot;, …</code></pre>
+<pre class="r"><code>states &lt;- full_join(combined1, combined, by = &quot;state&quot;)
+glimpse(states)</code></pre>
+<pre><code>## Observations: 51
+## Variables: 7
+## $ state &lt;chr&gt; &quot;Alabama&quot;, &quot;Alaska&quot;, &quot;Arizona&quot;,
+&quot;Arkansas&quot;, &quot;California&quot;, &quot;Colorado&quot;, &quot;Co…
+## $ gdp &lt;dbl&gt; 221735.5, 54734.1, 348297.1, 128418.9,
+2997732.8, 371749.6, 275726.9, 734…
+## $ governor &lt;chr&gt; &quot;Republican&quot;, &quot;Republican&quot;,
+&quot;Republican&quot;, &quot;Republican&quot;, &quot;Democrat&quot;, &quot;Demo…
+## $ women &lt;dbl&gt; 688, 857, 762, 681, 876, 908, 923, 789,
+1259, 716, 744, 797, 702, 831, 72…
+## $ men &lt;dbl&gt; 922, 1081, 910, 809, 992, 1069, 1140, 982,
+1445, 867, 919, 965, 883, 1069…
+## $ region &lt;chr&gt; &quot;S&quot;, &quot;W.&quot;, &quot;W.&quot;, &quot;S&quot;, &quot;W.&quot;, &quot;W.&quot;, &quot;NE&quot;,
+&quot;S&quot;, &quot;S&quot;, &quot;S&quot;, &quot;S&quot;, &quot;W.&quot;, &quot;M_W&quot;, …
+## $ net.immigration &lt;dbl&gt; 2772, 659, 7782, 268, 74028,
+10523, 12323, 73, 2604, 88678, 15053, 5014, …</code></pre>
+<p>##Question 1
+<strong>1. (15 pts)</strong> Perform a MANOVA testing whether any of your numeric variables (or a subset of them, if including them all doesn’t make sense) show a mean difference across levels of one of your categorical variables (3). If they do, perform univariate ANOVAs to find response(s) showing a mean difference across groups (3), and perform post-hoc t tests to find which groups differ (3). Discuss the number of tests you have performed, calculate the probability of at least one type I error (if unadjusted), and adjust the significance level accordingly (bonferroni correction) before discussing significant differences (3). Briefly discuss assumptions and whether or not they are likely to have been met (2).</p>
+<pre class="r"><code>#MANOVA on only subset of numeric variables 
+states.manova&lt;- manova(cbind(men, women) ~ region, data = states)
+summary(states.manova)</code></pre>
+<pre><code>##           Df  Pillai approx F num Df den Df Pr(&gt;F)
+## region     3 0.13025   1.0914      6     94 0.3733
+## Residuals 47</code></pre>
+<pre class="r"><code>#testing assumption of multivariate normality
+library(ggplot2)
+ggplot(states, aes(x = men, y = women)) +
+geom_point(alpha = .5) + geom_density_2d(h=2) + coord_fixed() + facet_wrap(~region)</code></pre>
+<p><img src="/project2_files/figure-html/unnamed-chunk-2-1.png" width="768" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#testing assumption of homogeneity of covariances
+homo&lt;-states%&gt;%group_by(region)%&gt;%do(s=cov(.[4:5]))
+for(i in 1:4){print(as.character(homo$region[i]));print(homo$s[i])}</code></pre>
+<pre><code>## [1] &quot;M_W&quot;
+## [[1]]
+##          women      men
+## women 3618.500 3451.167
+## men   3451.167 4364.897
+## 
+## [1] &quot;NE&quot;
+## [[1]]
+##          women      men
+## women 5178.250 5001.042
+## men   5001.042 8049.444
+## 
+## [1] &quot;S&quot;
+## [[1]]
+##          women      men
+## women 21577.78 21780.49
+## men   21780.49 22962.93
+## 
+## [1] &quot;W.&quot;
+## [[1]]
+##          women      men
+## women 5275.970 4317.364
+## men   4317.364 8437.273</code></pre>
+<p>MANOVA stands for Multivariate Analysis of Variance. The main function of a MANOVA is to see if multiple response variables show a mean difference across levels of a categorical variable.</p>
+<p>The MANOVA test was performed only on a subset of numeric variables instead of all of them. I chose to see if women’s weekly median earnings and men’s weekly median earnings showed a mean difference across the categorical variable, the different regions in the US (Midwestern, Northeastern, Southern, and Western). Because both of these variables are based on income, I thought it would definitely make sense to only examine these two in this MANOVA test. This way, for example, if the men’s weekly median income had a greater difference based on region and the women’s weekly median income didn’t, then it suggests possibly that men’s income can vary based on region, whereas women’s income is more likely to be stagnant.</p>
+<p>The MANOVA p-value(0.3733)&gt;0.05, thus we fail to reject the null hypothesis. Because the MANOVA is not significant, it is not necessary to perform univariate ANOVAs and post-hoc tests. The total number of tests performed was 1 (1 MANOVA), however, if my MANOVA and ANOVAs had been significant, I would’ve performed a total of 11 tests (1 MANOVA, 2ANOVAs, and 8 t-tests). Because I performed only one test, the probability of at least one type I error would be 0.05 (1-0.95). If the MANOVA and univariate ANOVAs were significant, the probability of at least one type I error would have been 0.4312 (1-(0.95)^11). If the MANOVA and univariate ANOVAs had been significant, the significance level according to Bonferroni correction would have been 0.0045 (0.05/11). Overall, for both women’s weekly median income and men’s weekly median income, means for each US region is equal (no significant differences).</p>
+<p>The assumptions for MANOVA are random sampling, multivariate normality of the dependent variables, homogeneity of covariance matrices within groups for each dependent variable and between dependent variables, no multicollinearity, no univariate or multivariate outliers, and the dependent variables are linearly related. The main assumptions that are tested for this MANOVA test are multivariate normality and homogeneity of covariances. Creating the density plot for multivariate normality suggests that multivariate normality is likely to have been met. It is also possible that homogeneity of covariances may not have been met.</p>
+<p>##Question 2
+<strong>2. (10 pts)</strong> Perform some kind of randomization test on your data (that makes sense). This can be anything you want! State null and alternative hypotheses, perform the test, and interpret the results (7). Create a plot visualizing the null distribution and the test statistic (3).</p>
+<pre class="r"><code>randdf &lt;- states%&gt;% group_by(region) %&gt;% filter(grepl(&quot;W.&quot;, region))
+randdf1 &lt;- states %&gt;% group_by(region) %&gt;% filter(grepl(&quot;NE&quot;, region))
+
+NEstates &lt;- c(randdf1$gdp)
+NEstates</code></pre>
+<pre><code>## [1] 275726.9 64856.0 569488.0 84463.9 622002.8 1668866.2
+783167.8 60587.6 33256.3</code></pre>
+<pre class="r"><code>Wstates &lt;- c(randdf$gdp)
+Wstates</code></pre>
+<pre><code>## [1] 54734.1 348297.1 2997732.8 371749.6 93797.9 50326.6
+169309.9 100296.8 239782.8
+## [10] 178137.6 565831.0 39118.5</code></pre>
+<pre class="r"><code>use&lt;- data.frame(gdp = c(NEstates, Wstates), stateregion = c(rep(&quot;NE&quot;, 9), rep(&quot;W&quot;, 12)))
+head(use)</code></pre>
+<pre><code>##         gdp stateregion
+## 1  275726.9          NE
+## 2   64856.0          NE
+## 3  569488.0          NE
+## 4   84463.9          NE
+## 5  622002.8          NE
+## 6 1668866.2          NE</code></pre>
+<pre class="r"><code>set.seed(348)
+randomdist &lt;-vector()
+for(i in 1:5000) {
+  use_df &lt;-data.frame(gdp=sample(use$gdp),stateregion = use$stateregion)
+  randomdist[i] &lt;-mean(use_df[use_df$stateregion==&quot;NE&quot;,]$gdp)-
+  mean(use_df[use_df$stateregion==&quot;W&quot;,]$gdp)
+}  
+
+randgdp &lt;- use%&gt;% group_by(stateregion)%&gt;% 
+  summarize(meangdp =mean(gdp))%&gt;%
+  summarize(`meandiff:`=diff(meangdp))%&gt;%pull
+randgdp</code></pre>
+<pre><code>## [1] -28397.72</code></pre>
+<pre class="r"><code>value &lt;- mean(randomdist&lt; -28397.72|randomdist &gt; 28397.72)
+value</code></pre>
+<pre><code>## [1] 0.9464</code></pre>
+<pre class="r"><code>#plot visualizing null dist and test stat
+{hist(randomdist,main=&quot;randomdist&quot;,ylab=&quot;&quot;); abline(v = -28397.72,col=&quot;blue&quot;)}</code></pre>
+<p><img src="/project2_files/figure-html/unnamed-chunk-3-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>When performing a randomization test, we must disrupt any relationships that might be present in a sample. By doing so, it is possible to create a null distribution. Then, we can also compare this to the two tailed p-value in this case.</p>
+<p>Null hypothesis: mean GDP in millions of dollars is the same for Northeastern vs Western US states.
+Alternate hypothesis: mean GDP in millions of dollars is different for Northeastern vs Western US states.</p>
+<p>Interpretation: The two tailed p-value&gt;0.05, thus we fail to reject the null hypothesis. This means that the mean GDP in millions of dollars is the same for Northeastern vs Western US states.</p>
+<p>Out of the four regions of the US, I chose the Northeastern and Western regions for this randomization test because I felt that they were the most geographically distant regions. I was curious to see whether the GDP would be different for the two most geographically distant regions. However, after performing this randomization test, it is clear that the mean GDP in millions of dollars is the same for Northeastern and Western regions in the US.</p>
+<p>##Question 3
+<strong>3. (35 pts)</strong> Build a linear regression model predicting one of your response variables from at least 2 other variables, including their interaction. Mean-center any numeric variables involved in the interaction.</p>
+<pre><code>- Interpret the coefficient estimates (do not discuss significance) (10)
+- Plot the regression using `ggplot()`. If your interaction is numeric by numeric, refer to code near the end of WS15 to make the plot. If you have 3 or more predictors, just chose two to plot for convenience. (8)
+- Check assumptions of linearity, normality, and homoskedasticity either graphically or using a hypothesis test (4)
+- Regardless, recompute regression results with robust standard errors via `coeftest(..., vcov=vcovHC(...))`. Discuss significance of results, including any changes from before/after robust SEs if applicable. (8)
+- What proportion of the variation in the outcome does your model explain? (4)</code></pre>
+<pre class="r"><code>states$net.immigration_c&lt;- states$net.immigration - mean(states$net.immigration, na.rm = T)
+
+library(sandwich)
+library(lmtest)
+
+statesfit&lt;- lm(gdp~ net.immigration_c + region + net.immigration_c*region, data = states)
+summary(statesfit)</code></pre>
+<pre><code>##
+## Call:
+## lm(formula = gdp ~ net.immigration_c + region +
+net.immigration_c *
+## region, data = states)
+##
+## Residuals:
+## Min 1Q Median 3Q Max
+## -514588 -56684 -3220 57927 612179
+##
+## Coefficients:
+## Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept) 5.042e+05 6.541e+04 7.709 1.23e-09 ***
+## net.immigration_c 3.684e+01 8.512e+00 4.328 8.81e-05 ***
+## regionNE -1.483e+05 8.910e+04 -1.665 0.1032
+## regionS -1.347e+05 7.841e+04 -1.718 0.0929 .
+## regionW.  -4.547e+04 8.305e+04 -0.547 0.5869
+## net.immigration_c:regionNE -3.853e+00 9.430e+00 -0.409
+0.6849
+## net.immigration_c:regionS -2.146e+01 8.701e+00 -2.467
+0.0177 *
+## net.immigration_c:regionW.  1.775e+00 8.885e+00 0.200
+0.8426
+## ---
+## Signif. codes: 0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1
+&#39; &#39; 1
+##
+## Residual standard error: 177200 on 43 degrees of freedom
+## Multiple R-squared: 0.9012, Adjusted R-squared: 0.8851
+## F-statistic: 56.01 on 7 and 43 DF, p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>#plot the linear regression
+ggplot(statesfit,aes(net.immigration_c , gdp , color = region))+ 
+  geom_point()+geom_smooth(method = &quot;lm&quot;)+
+  xlab(&quot;Centered Net Immigration in 2018&quot;) + 
+  ylab(&quot;GDP in millions in 2018&quot;)</code></pre>
+<p><img src="/project2_files/figure-html/unnamed-chunk-4-1.png" width="768" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#checking assumptions of linearity 
+#plot residuals on x axis against yhats 
+stateresids&lt;-statesfit$residuals
+yhat &lt;- statesfit$fitted.values
+ggplot()+geom_point(aes(stateresids,yhat))</code></pre>
+<p><img src="/project2_files/figure-html/unnamed-chunk-4-2.png" width="768" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#checking assumptions of normality
+stateresids&lt;-statesfit$residuals
+shapiro.test(stateresids)</code></pre>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  stateresids
+## W = 0.89212, p-value = 0.0002319</code></pre>
+<pre class="r"><code>ks.test(stateresids, &quot;pnorm&quot;, mean=0, sd(stateresids)) </code></pre>
+<pre><code>## 
+##  One-sample Kolmogorov-Smirnov test
+## 
+## data:  stateresids
+## D = 0.1587, p-value = 0.1373
+## alternative hypothesis: two-sided</code></pre>
+<pre class="r"><code>qplot(stateresids)</code></pre>
+<p><img src="/project2_files/figure-html/unnamed-chunk-4-3.png" width="768" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#checking assumptions of homoskedasticity 
+bptest(statesfit)</code></pre>
+<pre><code>## 
+##  studentized Breusch-Pagan test
+## 
+## data:  statesfit
+## BP = 37.862, df = 7, p-value = 3.219e-06</code></pre>
+<pre class="r"><code>#robust standard errors 
+coeftest(statesfit, vcov =vcovHC(statesfit))</code></pre>
+<pre><code>##
+## t test of coefficients:
+##
+## Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept) 5.0422e+05 6.9174e+04 7.2892 4.919e-09 ***
+## net.immigration_c 3.6844e+01 7.4456e+00 4.9485 1.198e-05
+***
+## regionNE -1.4834e+05 8.8961e+04 -1.6675 0.1027
+## regionS -1.3473e+05 9.9391e+04 -1.3556 0.1823
+## regionW.  -4.5465e+04 1.4794e+05 -0.3073 0.7601
+## net.immigration_c:regionNE -3.8530e+00 1.1276e+01
+-0.3417 0.7342
+## net.immigration_c:regionS -2.1464e+01 1.3923e+01 -1.5417
+0.1305
+## net.immigration_c:regionW.  1.7753e+00 1.9073e+01 0.0931
+0.9263
+## ---
+## Signif. codes: 0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1
+&#39; &#39; 1</code></pre>
+<pre class="r"><code>#proportion of variation in model
+SSR &lt;- sum((statesfit$fitted.values-mean(states$gdp))^2)
+SST &lt;- sum((states$gdp-mean(states$gdp))^2) 
+SSR/SST</code></pre>
+<pre><code>## [1] 0.9011602</code></pre>
+<p>A linear regression model essentially helps predict the response variable with the help of explanatory variables through a linear fit.</p>
+<p>Interpretation of coefficients:</p>
+<p>intercept: The predicted GDP in millions of dollars for an average net immigration, Midwestern state is 5.042e+05.</p>
+<p>net.immigration_c: States in the Midwestern region show an increase of 3.684e+01 in GDP (in millions of dollars) for every one unit increase in net immigration on average.</p>
+<p>regionNE: In states of average net immigration, GDP in millions of dollars is 1.483e+05 lower for states in the Northeastern region compared to states in the Midwestern region.</p>
+<p>regionS: In states of average net immigration, GDP in millions of dollars is 1.347e+05 lower for states in the Southern region compared to states in the Midwestern region.</p>
+<p>regionW: In states of average net immigration, GDP in millions of dollars is 4.547e+04 lower for states in the Western region compared to states in the Midwestern region.</p>
+<p>net.immigration_c:regionNE: The slope for net immigration on GDP in millions of dollars is 3.8530e+00 lower for states in the Northeastern region compared to states in the Midwestern region.<br />
+net.immigration_c:regionS: The slope for net immigration on GDP in millions of dollars is 2.146e+01 lower for states in the Southern region compared to states in the Midwestern region.</p>
+<p>net.immigration_c:regionW: The slope for net immigration on GDP in millions of dollars is 1.775e+00 greater for states in the Western region compared to states in the Midwestern region.</p>
+<p>We must also remember to check the assumptions. With respect to the assumptions of linearity, it is likely to have been met. With respect to the assumption of normality, normality may or may not have been met (different conclusions were reached based on the shapiro test and the ks.test). The qplot also suggests that normality may or may not have been met (difficult to tell for sure if it is met or not). With respect to homoskedasticity, the p-value&lt;0.05, we reject the null hypothesis, suggesting that homoskedasticity is not met.</p>
+<p>Robust standard errors can be used when the assumption of homoskedasticity is not met. After calculating the robust standard errors, it was found that the centered net immigration’s p-value&lt;0.05, thus we reject the null hypothesis, suggesting that there is a significant effect of centered net immigration on GDP. This was also found to be true before calculating the robust standard errors. However, before calculating the robust standard errors, the interaction between centered net immigration and the Southern region’s p-value&lt;0.05, suggesting that there is a significant effect of this interaction on GDP. On the other hand, after calculating the robust standard errors, this p-value&gt;0.05, suggesting that there is no significant effect.<br />
+The proportion of variation in the outcome that my model explains is 0.9011602.</p>
+<p>##Question 4
+<strong>4. (5 pts)</strong> Rerun same regression model (with interaction), but this time compute bootstrapped standard errors. Discuss any changes you observe in SEs and p-values using these SEs compared to the original SEs and the robust SEs)</p>
+<pre class="r"><code>statesresidual &lt;- statesfit$residuals
+statesfitvalues &lt;- statesfit$fitted.values
+statesresresamp &lt;-replicate(5000, {
+  new_statesresiduals &lt;-sample(statesresidual, replace = TRUE)
+  statesfit$new_y &lt;- statesfitvalues +new_statesresiduals
+  statesrefit1 &lt;-lm(statesfit$new_y~ net.immigration_c + 
+  region + net.immigration_c*region, data = states)
+  coef(statesrefit1)
+  })
+
+statesresresamp%&gt;%t%&gt;%as.data.frame%&gt;% summarize_all(sd)</code></pre>
+<pre><code>## (Intercept) net.immigration_c regionNE regionS regionW.
+net.immigration_c:regionNE
+## 1 59216.44 7.747107 81958.16 70966.13 76428.53 8.589835
+## net.immigration_c:regionS net.immigration_c:regionW.
+## 1 7.959392 8.109129</code></pre>
+<p>Bootstrapped standard errors can be computed when the assumptions of normality and homoskedasticity are not met.</p>
+<p>The robust standard errors for the intercept, Northeastern region, Southern region, Western region, centered net immigration and Northeastern region interaction, centered net immigration and Southern region interaction, and the centered net immigration and Western region interaction are greater than the computed bootstrapped standard errors for these same variables. Thus, the p-values for these variables after getting the robust standard error are greater than p-values for these same variables after computing the bootstrapped standard errors. On the other hand, the robust standard error for centered net immigration is less than the computed boostrapped standard error for centered net immigration. Thus, the p-value for this variable after getting the robust standard error would be smaller than the p-value for this same variable after computing the boostrapped standard error.</p>
+<p>The original standard errors for the intercept, centered net immigration, Northeastern region, Southern region, Western region, centered net immigration and Northeastern region interaction, centered net immigration and Southern region interaction, and the centered net immigration and Western region interaction are larger than the computed boostrapped standard errors for these variables/interactions. Thus, the p-values for these variables after getting the original standard errors are larger than the p-values after computing bootstrapped standard errors for these variables. This is because as the standard error value increases, the p-value also increases.</p>
+<p>##Question 5
+<strong>5. (40 pts)</strong> Perform a logistic regression predicting a binary categorical variable (if you don’t have one, make/get one) from at least two explanatory variables (interaction not necessary).</p>
+<pre><code>- Interpret coefficient estimates in context (10)
+- Report a confusion matrix for your logistic regression (2)
+- Compute and discuss the Accuracy, Sensitivity (TPR), Specificity (TNR), and Recall (PPV) of your model (5)
+- Using ggplot, plot density of log-odds (logit) by your binary outcome variable (3)
+- Generate an ROC curve (plot) and calculate AUC (either manually or with a package); interpret (10)
+- Perform 10-fold (or repeated random sub-sampling) CV and report average out-of-sample Accuracy, Sensitivity, and Recall (10)</code></pre>
+<pre class="r"><code>#creating binary variable
+states1&lt;-states%&gt;%mutate(y=ifelse(governor==&quot;Republican&quot;,1,0))
+head(states1)</code></pre>
+<pre><code>## # A tibble: 6 x 9
+## state gdp governor women men region net.immigration
+net.immigration_c y
+## &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1 Alabama 221736. Republican 688 922 S 2772 -8901.  1
+## 2 Alaska 54734. Republican 857 1081 W.  659 -11014.  1
+## 3 Arizona 348297. Republican 762 910 W.  7782 -3891.  1
+## 4 Arkansas 128419. Republican 681 809 S 268 -11405.  1
+## 5 California 2997733. Democrat 876 992 W.  74028 62355.
+0
+## 6 Colorado 371750. Democrat 908 1069 W.  10523 -1150.  0</code></pre>
+<pre class="r"><code>#logistic regression
+statesfit1 &lt;- glm(y ~ gdp + women, data = states1, family = &quot;binomial&quot;)
+coeftest(statesfit1)</code></pre>
+<pre><code>##
+## z test of coefficients:
+##
+## Estimate Std. Error z value Pr(&gt;|z|)
+## (Intercept) 9.2171e+00 3.3088e+00 2.7857 0.005342 **
+## gdp -6.8616e-07 6.8461e-07 -1.0023 0.316214
+## women -1.0313e-02 4.1549e-03 -2.4823 0.013055 *
+## ---
+## Signif. codes: 0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1
+&#39; &#39; 1</code></pre>
+<pre class="r"><code>exp(coef(statesfit1))</code></pre>
+<pre><code>##  (Intercept)          gdp        women 
+## 1.006800e+04 9.999993e-01 9.897395e-01</code></pre>
+<pre class="r"><code>#confusion matrix
+prob_glm &lt;- predict(statesfit1, data = states1, type = &quot;response&quot;)
+table(predict = as.numeric(prob_glm&gt;0.5), truth =states1$y) %&gt;% addmargins</code></pre>
+<pre><code>##        truth
+## predict  0  1 Sum
+##     0    8  3  11
+##     1    9 31  40
+##     Sum 17 34  51</code></pre>
+<pre class="r"><code>#accuracy
+accuracy &lt;- (8+31)/51
+accuracy</code></pre>
+<pre><code>## [1] 0.7647059</code></pre>
+<pre class="r"><code>#TPR
+sensitivity &lt;- 31/34
+sensitivity</code></pre>
+<pre><code>## [1] 0.9117647</code></pre>
+<pre class="r"><code>#TNR
+specificity &lt;- 8/17
+specificity</code></pre>
+<pre><code>## [1] 0.4705882</code></pre>
+<pre class="r"><code>#PPV
+PPV &lt;- 31/40
+PPV</code></pre>
+<pre><code>## [1] 0.775</code></pre>
+<pre class="r"><code>#ROC and AUC
+library(plotROC)
+states1$prob1 &lt;- predict(statesfit1, data = states1, type=&quot;response&quot;)
+ROCplot&lt;-ggplot(states1)+geom_roc(aes(d=y, m=prob1), n.cuts=0) 
+ROCplot</code></pre>
+<p><img src="/project2_files/figure-html/unnamed-chunk-6-1.png" width="768" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>calc_auc(ROCplot)</code></pre>
+<pre><code>##   PANEL group       AUC
+## 1     1    -1 0.7698962</code></pre>
+<pre class="r"><code>#plot density of log-odds by binary outcome variable 
+states1$y &lt;- as.factor(states1$y)
+states1$logit&lt;-predict(statesfit1,type=&quot;link&quot;)
+states1%&gt;%ggplot()+geom_density(aes(logit,color=y,fill=y), alpha=.5)+ 
+  xlab(&quot;log-odds (logit)&quot;)</code></pre>
+<p><img src="/project2_files/figure-html/unnamed-chunk-6-2.png" width="768" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>#classification diagnostics first 
+class_diag &lt;- function(probs,truth){
+
+tab&lt;-table(factor(probs&gt;.5,levels=c(&quot;FALSE&quot;,&quot;TRUE&quot;)),truth)
+acc=sum(diag(tab))/sum(tab)
+sens=tab[2,2]/colSums(tab)[2]
+spec=tab[1,1]/colSums(tab)[1]
+ppv=tab[2,2]/rowSums(tab)[2]
+if(is.numeric(truth)==FALSE &amp; is.logical(truth)==FALSE) truth&lt;-as.numeric(truth)-1
+
+ord&lt;-order(probs, decreasing=TRUE)
+probs &lt;- probs[ord]; truth &lt;- truth[ord]
+TPR=cumsum(truth)/max(1,sum(truth))
+FPR=cumsum(!truth)/max(1,sum(!truth))
+dup&lt;-c(probs[-1]&gt;=probs[-length(probs)], FALSE)
+TPR&lt;-c(0,TPR[!dup],1); FPR&lt;-c(0,FPR[!dup],1)
+n &lt;- length(TPR)
+auc&lt;- sum( ((TPR[-1]+TPR[-n])/2) * (FPR[-1]-FPR[-n]) )
+data.frame(acc,sens,spec,ppv,auc)
+}
+
+class_diag(prob_glm, states1$y)</code></pre>
+<pre><code>##         acc      sens      spec   ppv       auc
+## 1 0.7647059 0.9117647 0.4705882 0.775 0.7698962</code></pre>
+<pre class="r"><code>#k-fold CV 
+set.seed(1234)
+k=10 
+data1&lt;-states1[sample(nrow(states1)),] 
+folds&lt;-cut(seq(1:nrow(states1)),breaks=k,labels=F) 
+diags&lt;-NULL
+for(i in 1:k){
+train&lt;-data1[folds!=i,]
+test&lt;-data1[folds==i,]
+truth&lt;-test$y
+fit1&lt;-glm(y ~ gdp + women,data=train,family=&quot;binomial&quot;)
+probs&lt;-predict(fit1,newdata = test,type=&quot;response&quot;)
+diags&lt;-rbind(diags,class_diag(probs,truth))
+}
+
+#out-of-sample performance
+summarize_all(diags,mean) </code></pre>
+<pre><code>##         acc      sens spec       ppv    auc
+## 1 0.7066667 0.8766667  NaN 0.7416667 0.7875</code></pre>
+<p>Unlike a linear regression, a logistic regression is able to predict the odds of a binary categorical variable in this case. Using this, we can now interpret the coefficients.</p>
+<p>Interpretation of coefficients:</p>
+<p>intercept: the odds of a Republican governor for a state with GDP = 0 and women’s weekly median earnings = 0 is 1.006800e+04.</p>
+<p>gdp: Controlling for women’s weekly median earnings in a state, for every one additional dollar in that state’s GDP in millions of dollars, the odds of a Republican governor for that state decreases by a factor of 9.999993e-01.</p>
+<p>women: Controlling for a state’s GDP, for every one additional dollar in women’s weekly median income in that state, the odds of a Republican governor for that state decreases by a factor of 9.897395e-01. (significant)</p>
+<p>A confusion matrix is a table that displays the truth (what actually happened) and the prediction (what we think might happen). Based on this confusion matrix, it is possible to calculate the accuracy, sensitivity, specificity, and PPV. The accuracy was 0.7647059, the sensitivity was 0.9117647, the specificity was 0.4705882, and the PPV was 0.775. The accuracy is okay, but definitely could be higher. While the sensitivity is good, the specificity is very low. Likewise, the PPV is also not that great either and is okay.</p>
+<p>After computing these values, I plotted the ROC plot which has the FPR on the x-axis and the TPR on the y-axis. The calculated AUC value from the ROC plot was 0.7698962, which can be classified as fair since it is between 0.7 and 0.8.</p>
+<p>After this, I performed the 10-fold CV to get the average out-of-sample accuracy, sensitivity, and recall. The average out-of-sample accuracy was 0.7066667, average out-of-sample sensitivity was 0.8766667, and the average out-of-sample recall was 0.7416667.</p>
+<p>##Question 6
+<strong>6. (10 pts)</strong> Choose one variable you want to predict (can be one you used from before; either binary or continuous) and run a LASSO regression inputting all the rest of your variables as predictors. Choose lambda to give the simplest model whose accuracy is near that of the best (i.e., <code>lambda.1se</code>). Discuss which variables are retained. Perform 10-fold CV using this model: if response in binary, compare model’s out-of-sample accuracy to that of your logistic regression in part 5; if response is numeric, compare the residual standard error (at the bottom of the summary output, aka RMSE): lower is better fit!</p>
+<pre class="r"><code>#library(glmnet)
+newstates &lt;- states %&gt;% select(-state, -net.immigration_c)
+head(newstates)</code></pre>
+<pre><code>## # A tibble: 6 x 6
+##        gdp governor   women   men region net.immigration
+##      &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;            &lt;dbl&gt;
+## 1  221736. Republican   688   922 S                 2772
+## 2   54734. Republican   857  1081 W.                 659
+## 3  348297. Republican   762   910 W.                7782
+## 4  128419. Republican   681   809 S                  268
+## 5 2997733. Democrat     876   992 W.               74028
+## 6  371750. Democrat     908  1069 W.               10523</code></pre>
+<pre class="r"><code>newstates$region &lt;- factor(newstates$region)
+newstates$governor &lt;- factor(newstates$governor) 
+y&lt;-as.matrix(newstates$gdp)
+x&lt;-model.matrix(gdp~-1+., data = newstates)
+head(x)</code></pre>
+<pre><code>## governorDemocrat governorRepublican women men regionNE
+regionS regionW. net.immigration
+## 1 0 1 688 922 0 1 0 2772
+## 2 0 1 857 1081 0 0 1 659
+## 3 0 1 762 910 0 0 1 7782
+## 4 0 1 681 809 0 1 0 268
+## 5 1 0 876 992 0 0 1 74028
+## 6 1 0 908 1069 0 0 1 10523</code></pre>
+<pre class="r"><code>#running LASSO regression
+#set.seed(1234)
+#cv_states&lt;-cv.glmnet(x,y)
+#lasso_states&lt;-glmnet(x,y, lambda=cv_states$lambda.1se)
+#coef(lasso_states)
+
+#prob_lasso &lt;- predict(lasso_states, newx = x,type = &quot;response&quot;)
+#head(prob_lasso)
+
+#MSE of the full model 
+#mean((newstates$gdp - prob_lasso)^2)
+
+#10-fold CV 
+set.seed(1234)
+k=10 
+data3&lt;-newstates[sample(nrow(newstates)),] 
+folds3&lt;-cut(seq(1:nrow(newstates)),breaks=k,labels=F) 
+diags3&lt;-NULL
+for(i in 1:k){
+train3&lt;-data3[folds3!=i,]
+test3&lt;-data3[folds3==i,]
+fit3&lt;-lm(gdp~net.immigration,data=train3)
+yhat3&lt;-predict(fit3,newdata=test3)
+diags3&lt;-mean((test3$gdp-yhat3)^2)
+}
+
+#MSE using 10-fold CV
+mean(diags3)</code></pre>
+<pre><code>## [1] 14361878073</code></pre>
+<p>Before running the Lasso regression, it was necessary to remove some variables. The centered net immigration variable was removed because it was used for the linear regression in question 3, but is no longer required for this Lasso regression. I also removed the state variable because I did not want all of the states to show up when running the Lasso regression. Instead, I kept the regions variable, which contains all of the states.</p>
+<p>The Lasso regression helps determine what variables to retain. This is important because it gives us insight into which explanatory variables are very good predictors of GDP, in this case. From the Lasso regression, it is clear that the only retained variable is net immigration.</p>
+<p>The 10-fold CV was performed using net immigration as the only predictor for GDP. Because we have chosen the only variable that best predicts GDP, it makes sense that this 10-fold CV should provide better predictions. Overall, the MSE from the prediction using this 10-fold CV was smaller than the MSE from the full model. Becuase the 10-fold CV produced a smaller MSE, it is a much better fit. It makes sense that this 10-fold CV with only one important predictor would provide a better fit than a model that uses all predictors.</p>
+<p>Note that the <code>echo = FALSE</code> parameter was added to the code chunk to prevent printing of the R code that generated the plot.</p>

@@ -1,0 +1,591 @@
+---
+title: 'Project 1: Exploratory Analysis'
+output:
+  pdf_document: default
+  html_document: default
+---
+
+
+
+<p>Sandhya Srinivasa, ss64834</p>
+<div id="introduction-4-points" class="section level1">
+<h1>Introduction (4 points)</h1>
+<p>My two datasets include a poverty dataset and a birth and death dataset. The variables in the poverty dataset are poverty counts and percents in 2017 and 2018 by US state or territory (includes Puerto Rico, etc). The variables in the birth and death dataset are fertility rates, birth counts in 2017, death rate, and death counts in 2018 by US state or territory. These datasets were found online in the United States Census Bureau and the Center for Disease Control websites. These two datasets helped me explore my interest in sociology. As a Texan, I am aware of how Texas has a large poverty count, large population size, and has relatively high birth and death rates. However, I have always been curious of a potential relationship between poverty and fertility and death rates in not only Texas, but other US states and territories. Based on my own knowledge, I expect poverty counts to rise with increasing fertility and death rates. I also believe that the more highly populated a state is, the higher the poverty, birth, and death counts.</p>
+<div id="sources-for-datasets" class="section level2">
+<h2>Sources for datasets:</h2>
+<p><a href="https://www.cdc.gov/nchs/fastats/state-and-territorial-data.htm" class="uri">https://www.cdc.gov/nchs/fastats/state-and-territorial-data.htm</a>
+<a href="https://www.census.gov/content/dam/Census/library/publications/2019/acs/acsbr18-02.pdf" class="uri">https://www.census.gov/content/dam/Census/library/publications/2019/acs/acsbr18-02.pdf</a> (used Table 1 only - removed margin of error columns)</p>
+</div>
+</div>
+<div id="tidying-rearranging-widelong-8-points" class="section level1">
+<h1>Tidying: Rearranging Wide/Long (8 points)</h1>
+<pre class="r"><code>library(dplyr)
+library(tidyr)
+library(tidyverse)
+library(ggplot2)
+library(readxl)
+
+birthdeath &lt;- read_excel(&quot;~/Desktop/Project1/birthdeath.xlsx&quot;)
+glimpse(birthdeath)</code></pre>
+<pre><code>## Observations: 56
+## Variables: 6
+## $ Territory      &lt;chr&gt; &quot;Alabama_S&quot;, &quot;Alaska_W&quot;, &quot;Arizona_W&quot;, &quot;Arkansas_S&quot;, &quot;C…
+## $ Births         &lt;dbl&gt; 57761, 10086, 80723, 37018, 454920, 62885, 34725, 1062…
+## $ Fertility_Rate &lt;dbl&gt; 60.9, 69.3, 58.6, 64.0, 56.2, 54.1, 51.8, 59.1, 48.8, …
+## $ Deaths         &lt;dbl&gt; 53238, 4411, 57758, 32588, 268189, 38063, 31312, 9178,…
+## $ Death_Rate     &lt;dbl&gt; 1092.1, 596.2, 823.2, 1084.7, 678.3, 678.8, 872.6, 954…
+## $ ...6           &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…</code></pre>
+<pre class="r"><code>finalbirthdeath &lt;- birthdeath %&gt;% select(-...6)
+glimpse(finalbirthdeath)</code></pre>
+<pre><code>## Observations: 56
+## Variables: 5
+## $ Territory      &lt;chr&gt; &quot;Alabama_S&quot;, &quot;Alaska_W&quot;, &quot;Arizona_W&quot;, &quot;Arkansas_S&quot;, &quot;C…
+## $ Births         &lt;dbl&gt; 57761, 10086, 80723, 37018, 454920, 62885, 34725, 1062…
+## $ Fertility_Rate &lt;dbl&gt; 60.9, 69.3, 58.6, 64.0, 56.2, 54.1, 51.8, 59.1, 48.8, …
+## $ Deaths         &lt;dbl&gt; 53238, 4411, 57758, 32588, 268189, 38063, 31312, 9178,…
+## $ Death_Rate     &lt;dbl&gt; 1092.1, 596.2, 823.2, 1084.7, 678.3, 678.8, 872.6, 954…</code></pre>
+<pre class="r"><code>longerbirthdeath &lt;- finalbirthdeath %&gt;% pivot_longer(cols = c(&quot;Births&quot;, 
+    &quot;Fertility_Rate&quot;, &quot;Deaths&quot;, &quot;Death_Rate&quot;), names_to = &quot;Population Stats&quot;, 
+    values_to = &quot;Value&quot;)
+glimpse(longerbirthdeath)</code></pre>
+<pre><code>## Observations: 224
+## Variables: 3
+## $ Territory          &lt;chr&gt; &quot;Alabama_S&quot;, &quot;Alabama_S&quot;, &quot;Alabama_S&quot;, &quot;Alabama_S&quot;…
+## $ `Population Stats` &lt;chr&gt; &quot;Births&quot;, &quot;Fertility_Rate&quot;, &quot;Deaths&quot;, &quot;Death_Rate&quot;…
+## $ Value              &lt;dbl&gt; 57761.0, 60.9, 53238.0, 1092.1, 10086.0, 69.3, 441…</code></pre>
+<pre class="r"><code>widerbirthdeath &lt;- longerbirthdeath %&gt;% pivot_wider(names_from = &quot;Population Stats&quot;, 
+    values_from = &quot;Value&quot;)
+glimpse(widerbirthdeath)</code></pre>
+<pre><code>## Observations: 56
+## Variables: 5
+## $ Territory      &lt;chr&gt; &quot;Alabama_S&quot;, &quot;Alaska_W&quot;, &quot;Arizona_W&quot;, &quot;Arkansas_S&quot;, &quot;C…
+## $ Births         &lt;dbl&gt; 57761, 10086, 80723, 37018, 454920, 62885, 34725, 1062…
+## $ Fertility_Rate &lt;dbl&gt; 60.9, 69.3, 58.6, 64.0, 56.2, 54.1, 51.8, 59.1, 48.8, …
+## $ Deaths         &lt;dbl&gt; 53238, 4411, 57758, 32588, 268189, 38063, 31312, 9178,…
+## $ Death_Rate     &lt;dbl&gt; 1092.1, 596.2, 823.2, 1084.7, 678.3, 678.8, 872.6, 954…</code></pre>
+<pre class="r"><code>finalpoverty &lt;- read_excel(&quot;~/Desktop/Project1/poverty.xlsx&quot;)
+glimpse(finalpoverty)</code></pre>
+<pre><code>## Observations: 53
+## Variables: 7
+## $ Territory              &lt;chr&gt; &quot;United States&quot;, &quot;Alabama_S&quot;, &quot;Alaska_W&quot;, &quot;Ari…
+## $ PovertyCounts_2017     &lt;dbl&gt; 42583651, 802656, 80012, 1018935, 478365, 5160…
+## $ PovertyPercent_2017    &lt;dbl&gt; 13.4, 16.9, 11.1, 14.9, 16.4, 13.3, 10.3, 9.6,…
+## $ PovertyCounts_2018     &lt;dbl&gt; 41852315, 800422, 78620, 983499, 504504, 49693…
+## $ PovertyPercent_2018    &lt;dbl&gt; 13.1, 16.8, 10.9, 14.0, 17.2, 12.8, 9.6, 10.4,…
+## $ CountChangeinPoverty   &lt;dbl&gt; -731336, -2234, -1392, -35436, 26139, -190882,…
+## $ PercentChangeinPoverty &lt;dbl&gt; -0.3, -0.1, -0.2, -0.9, 0.8, -0.5, -0.7, 0.8, …</code></pre>
+<pre class="r"><code>longerpoverty &lt;- finalpoverty %&gt;% pivot_longer(cols = c(&quot;PovertyCounts_2017&quot;, 
+    &quot;PovertyPercent_2017&quot;, &quot;PovertyCounts_2018&quot;, &quot;PovertyPercent_2018&quot;, 
+    &quot;CountChangeinPoverty&quot;, &quot;PercentChangeinPoverty&quot;), names_to = &quot;Population Poverty Stats&quot;, 
+    values_to = &quot;Values&quot;)
+glimpse(longerpoverty)</code></pre>
+<pre><code>## Observations: 318
+## Variables: 3
+## $ Territory                  &lt;chr&gt; &quot;United States&quot;, &quot;United States&quot;, &quot;United …
+## $ `Population Poverty Stats` &lt;chr&gt; &quot;PovertyCounts_2017&quot;, &quot;PovertyPercent_2017…
+## $ Values                     &lt;dbl&gt; 42583651.0, 13.4, 41852315.0, 13.1, -73133…</code></pre>
+<pre class="r"><code>widerpoverty &lt;- longerpoverty %&gt;% pivot_wider(names_from = `Population Poverty Stats`, 
+    values_from = &quot;Values&quot;)
+glimpse(widerpoverty)</code></pre>
+<pre><code>## Observations: 53
+## Variables: 7
+## $ Territory              &lt;chr&gt; &quot;United States&quot;, &quot;Alabama_S&quot;, &quot;Alaska_W&quot;, &quot;Ari…
+## $ PovertyCounts_2017     &lt;dbl&gt; 42583651, 802656, 80012, 1018935, 478365, 5160…
+## $ PovertyPercent_2017    &lt;dbl&gt; 13.4, 16.9, 11.1, 14.9, 16.4, 13.3, 10.3, 9.6,…
+## $ PovertyCounts_2018     &lt;dbl&gt; 41852315, 800422, 78620, 983499, 504504, 49693…
+## $ PovertyPercent_2018    &lt;dbl&gt; 13.1, 16.8, 10.9, 14.0, 17.2, 12.8, 9.6, 10.4,…
+## $ CountChangeinPoverty   &lt;dbl&gt; -731336, -2234, -1392, -35436, 26139, -190882,…
+## $ PercentChangeinPoverty &lt;dbl&gt; -0.3, -0.1, -0.2, -0.9, 0.8, -0.5, -0.7, 0.8, …</code></pre>
+<p>My two datasets were already wide, however, I still used pivot_longer() followed by pivot_wider(). The pivot_longer() function was used to convert wide data into long data. Both datasets were wide because each variable had its own column, which is not the case with long data. Before using pivot_longer(), unnecessary columns were removed from the “birthdeath” dataset using select() and the final dataset was assigned to “finalbirthdeath”. Then, the datasets were converted into long data using pivot_longer(). All variable names in “finalbirthdeath” were placed under the “Population Stats” column and all values for these variables were placed under the “Value” column. Likewise, all variable names in “finalpoverty” were placed under the “Population Poverty Stats” column and all values for these variables were placed under the “Values” column. These newly long datas were assigned to “longerbirthdeath” and “longerpoverty”. Pivot_wider() was used to convert “longerbirthdeath” and “longerpoverty” back into wide data, and both were assigned to “widerbirthdeath” and “widerpoverty” respecfully. Now, all of the variable names under the “Population Poverty Stats” and “Population Stats” columns would have their own columns with their values in their column.</p>
+</div>
+<div id="joiningmerging-8-points" class="section level1">
+<h1>Joining/Merging (8 points)</h1>
+<pre class="r"><code>joineddata &lt;- full_join(widerpoverty, widerbirthdeath, by = &quot;Territory&quot;)
+glimpse(joineddata)</code></pre>
+<pre><code>## Observations: 57
+## Variables: 11
+## $ Territory              &lt;chr&gt; &quot;United States&quot;, &quot;Alabama_S&quot;, &quot;Alaska_W&quot;, &quot;Ari…
+## $ PovertyCounts_2017     &lt;dbl&gt; 42583651, 802656, 80012, 1018935, 478365, 5160…
+## $ PovertyPercent_2017    &lt;dbl&gt; 13.4, 16.9, 11.1, 14.9, 16.4, 13.3, 10.3, 9.6,…
+## $ PovertyCounts_2018     &lt;dbl&gt; 41852315, 800422, 78620, 983499, 504504, 49693…
+## $ PovertyPercent_2018    &lt;dbl&gt; 13.1, 16.8, 10.9, 14.0, 17.2, 12.8, 9.6, 10.4,…
+## $ CountChangeinPoverty   &lt;dbl&gt; -731336, -2234, -1392, -35436, 26139, -190882,…
+## $ PercentChangeinPoverty &lt;dbl&gt; -0.3, -0.1, -0.2, -0.9, 0.8, -0.5, -0.7, 0.8, …
+## $ Births                 &lt;dbl&gt; NA, 57761, 10086, 80723, 37018, 454920, 62885,…
+## $ Fertility_Rate         &lt;dbl&gt; NA, 60.9, 69.3, 58.6, 64.0, 56.2, 54.1, 51.8, …
+## $ Deaths                 &lt;dbl&gt; NA, 53238, 4411, 57758, 32588, 268189, 38063, …
+## $ Death_Rate             &lt;dbl&gt; NA, 1092.1, 596.2, 823.2, 1084.7, 678.3, 678.8…</code></pre>
+<pre class="r"><code>joineddata.nona &lt;- joineddata %&gt;% na.omit()
+glimpse(joineddata.nona)</code></pre>
+<pre><code>## Observations: 51
+## Variables: 11
+## $ Territory              &lt;chr&gt; &quot;Alabama_S&quot;, &quot;Alaska_W&quot;, &quot;Arizona_W&quot;, &quot;Arkansa…
+## $ PovertyCounts_2017     &lt;dbl&gt; 802656, 80012, 1018935, 478365, 5160208, 56431…
+## $ PovertyPercent_2017    &lt;dbl&gt; 16.9, 11.1, 14.9, 16.4, 13.3, 10.3, 9.6, 16.6,…
+## $ PovertyCounts_2018     &lt;dbl&gt; 800422, 78620, 983499, 504504, 4969326, 537492…
+## $ PovertyPercent_2018    &lt;dbl&gt; 16.8, 10.9, 14.0, 17.2, 12.8, 9.6, 10.4, 16.2,…
+## $ CountChangeinPoverty   &lt;dbl&gt; -2234, -1392, -35436, 26139, -190882, -26820, …
+## $ PercentChangeinPoverty &lt;dbl&gt; -0.1, -0.2, -0.9, 0.8, -0.5, -0.7, 0.8, -0.4, …
+## $ Births                 &lt;dbl&gt; 57761, 10086, 80723, 37018, 454920, 62885, 347…
+## $ Fertility_Rate         &lt;dbl&gt; 60.9, 69.3, 58.6, 64.0, 56.2, 54.1, 51.8, 48.8…
+## $ Deaths                 &lt;dbl&gt; 53238, 4411, 57758, 32588, 268189, 38063, 3131…
+## $ Death_Rate             &lt;dbl&gt; 1092.1, 596.2, 823.2, 1084.7, 678.3, 678.8, 87…</code></pre>
+<p>Both “widerpoverty” and “widerbirthdeath” were combined using a shared column between the two, “Territory”. Full_join() was used to completely join both datasets together. I felt that it was not necessary to only match the values in both datasets using inner_join() because it would exclude unmatched values from both datasets. I also felt that it was unnecessary to use left_join() or right_join() because, once again, it would exclude unmatched values from one of the datasets. Instead, my goal was to keep all of my values for the different columns in both datasets. Thus, my only option was full_join(). After using full_join() to completely join the datasets, I used na.omit() to remove any NAs in the new dataset. The problem with removing these NAs is that I will be losing data for poverty and birth and death counts from Delaware, the Virgin Islands, Guam, American Samoa, and the Northern Marianas. Most of these territories and states did not have NAs for all variables, rather only for some; so, it is possible that these states and territories could be significant when calculating summary statistics for other variables other than the ones they had NAs for, using ggplot(), or even when using PAM.</p>
+</div>
+<div id="wrangling-40-points" class="section level1">
+<h1>Wrangling (40 points)</h1>
+<pre class="r"><code>fertilityrate &lt;- joineddata.nona %&gt;% filter(Fertility_Rate &gt; 
+    65) %&gt;% summarize_all(list(Mean = mean, Stdev = sd, Min = min, 
+    Max = max, Var = var))
+glimpse(fertilityrate)</code></pre>
+<pre><code>## Observations: 1
+## Variables: 55
+## $ Territory_Mean               &lt;dbl&gt; NA
+## $ PovertyCounts_2017_Mean      &lt;dbl&gt; 152371.2
+## $ PovertyPercent_2017_Mean     &lt;dbl&gt; 10.98
+## $ PovertyCounts_2018_Mean      &lt;dbl&gt; 151207.2
+## $ PovertyPercent_2018_Mean     &lt;dbl&gt; 10.94
+## $ CountChangeinPoverty_Mean    &lt;dbl&gt; -1164
+## $ PercentChangeinPoverty_Mean  &lt;dbl&gt; -0.04
+## $ Births_Mean                  &lt;dbl&gt; 21062.4
+## $ Fertility_Rate_Mean          &lt;dbl&gt; 70.38
+## $ Deaths_Mean                  &lt;dbl&gt; 10747
+## $ Death_Rate_Mean              &lt;dbl&gt; 765.04
+## $ Territory_Stdev              &lt;dbl&gt; NA
+## $ PovertyCounts_2017_Stdev     &lt;dbl&gt; 95127.56
+## $ PovertyPercent_2017_Stdev    &lt;dbl&gt; 1.247798
+## $ PovertyCounts_2018_Stdev     &lt;dbl&gt; 89335.58
+## $ PovertyPercent_2018_Stdev    &lt;dbl&gt; 1.457052
+## $ CountChangeinPoverty_Stdev   &lt;dbl&gt; 8540.05
+## $ PercentChangeinPoverty_Stdev &lt;dbl&gt; 0.427785
+## $ Births_Stdev                 &lt;dbl&gt; 15941.3
+## $ Fertility_Rate_Stdev         &lt;dbl&gt; 2.381596
+## $ Deaths_Stdev                 &lt;dbl&gt; 6268.637
+## $ Death_Rate_Stdev             &lt;dbl&gt; 162.886
+## $ Territory_Min                &lt;chr&gt; &quot;Alaska_W&quot;
+## $ PovertyCounts_2017_Min       &lt;dbl&gt; 75279
+## $ PovertyPercent_2017_Min      &lt;dbl&gt; 9.7
+## $ PovertyCounts_2018_Min       &lt;dbl&gt; 78620
+## $ PovertyPercent_2018_Min      &lt;dbl&gt; 9
+## $ CountChangeinPoverty_Min     &lt;dbl&gt; -15784
+## $ PercentChangeinPoverty_Min   &lt;dbl&gt; -0.7
+## $ Births_Min                   &lt;dbl&gt; 10086
+## $ Fertility_Rate_Min           &lt;dbl&gt; 68.4
+## $ Deaths_Min                   &lt;dbl&gt; 4411
+## $ Death_Rate_Min               &lt;dbl&gt; 581.4
+## $ Territory_Max                &lt;chr&gt; &quot;Utah_W&quot;
+## $ PovertyCounts_2017_Max       &lt;dbl&gt; 296557
+## $ PovertyPercent_2017_Max      &lt;dbl&gt; 13
+## $ PovertyCounts_2018_Max       &lt;dbl&gt; 280773
+## $ PovertyPercent_2018_Max      &lt;dbl&gt; 13.1
+## $ CountChangeinPoverty_Max     &lt;dbl&gt; 5432
+## $ PercentChangeinPoverty_Max   &lt;dbl&gt; 0.4
+## $ Births_Max                   &lt;dbl&gt; 47209
+## $ Fertility_Rate_Max           &lt;dbl&gt; 73.6
+## $ Deaths_Max                   &lt;dbl&gt; 18035
+## $ Death_Rate_Max               &lt;dbl&gt; 919.4
+## $ Territory_Var                &lt;dbl&gt; NA
+## $ PovertyCounts_2017_Var       &lt;dbl&gt; 9049251842
+## $ PovertyPercent_2017_Var      &lt;dbl&gt; 1.557
+## $ PovertyCounts_2018_Var       &lt;dbl&gt; 7980845101
+## $ PovertyPercent_2018_Var      &lt;dbl&gt; 2.123
+## $ CountChangeinPoverty_Var     &lt;dbl&gt; 72932450
+## $ PercentChangeinPoverty_Var   &lt;dbl&gt; 0.183
+## $ Births_Var                   &lt;dbl&gt; 254124924
+## $ Fertility_Rate_Var           &lt;dbl&gt; 5.672
+## $ Deaths_Var                   &lt;dbl&gt; 39295806
+## $ Death_Rate_Var               &lt;dbl&gt; 26531.85</code></pre>
+<pre class="r"><code>fullstats &lt;- joineddata.nona %&gt;% summarize_all(list(Mean = mean, 
+    Stdev = sd, Min = min, Max = max, Var = var))
+glimpse(fullstats)</code></pre>
+<pre><code>## Observations: 1
+## Variables: 55
+## $ Territory_Mean               &lt;dbl&gt; NA
+## $ PovertyCounts_2017_Mean      &lt;dbl&gt; 861283.6
+## $ PovertyPercent_2017_Mean     &lt;dbl&gt; 13.73333
+## $ PovertyCounts_2018_Mean      &lt;dbl&gt; 845073.3
+## $ PovertyPercent_2018_Mean     &lt;dbl&gt; 13.51176
+## $ CountChangeinPoverty_Mean    &lt;dbl&gt; -16210.27
+## $ PercentChangeinPoverty_Mean  &lt;dbl&gt; -0.2215686
+## $ Births_Mean                  &lt;dbl&gt; 74559.12
+## $ Fertility_Rate_Mean          &lt;dbl&gt; 59.22941
+## $ Deaths_Mean                  &lt;dbl&gt; 55002
+## $ Death_Rate_Mean              &lt;dbl&gt; 900.7686
+## $ Territory_Stdev              &lt;dbl&gt; NA
+## $ PovertyCounts_2017_Stdev     &lt;dbl&gt; 992537.8
+## $ PovertyPercent_2017_Stdev    &lt;dbl&gt; 5.259531
+## $ PovertyCounts_2018_Stdev     &lt;dbl&gt; 972699.3
+## $ PovertyPercent_2018_Stdev    &lt;dbl&gt; 5.091744
+## $ CountChangeinPoverty_Stdev   &lt;dbl&gt; 42581.09
+## $ PercentChangeinPoverty_Stdev &lt;dbl&gt; 0.5216565
+## $ Births_Stdev                 &lt;dbl&gt; 86397.88
+## $ Fertility_Rate_Stdev         &lt;dbl&gt; 6.704813
+## $ Deaths_Stdev                 &lt;dbl&gt; 55532.01
+## $ Death_Rate_Stdev             &lt;dbl&gt; 138.2141
+## $ Territory_Min                &lt;chr&gt; &quot;Alabama_S&quot;
+## $ PovertyCounts_2017_Min       &lt;dbl&gt; 64054
+## $ PovertyPercent_2017_Min      &lt;dbl&gt; 7.7
+## $ PovertyCounts_2018_Min       &lt;dbl&gt; 62301
+## $ PovertyPercent_2018_Min      &lt;dbl&gt; 7.6
+## $ CountChangeinPoverty_Min     &lt;dbl&gt; -190882
+## $ PercentChangeinPoverty_Min   &lt;dbl&gt; -1.3
+## $ Births_Min                   &lt;dbl&gt; 5432
+## $ Fertility_Rate_Min           &lt;dbl&gt; 34.8
+## $ Deaths_Min                   &lt;dbl&gt; 4411
+## $ Death_Rate_Min               &lt;dbl&gt; 581.4
+## $ Territory_Max                &lt;chr&gt; &quot;Wyoming_W&quot;
+## $ PovertyCounts_2017_Max       &lt;dbl&gt; 5160208
+## $ PovertyPercent_2017_Max      &lt;dbl&gt; 44.4
+## $ PovertyCounts_2018_Max       &lt;dbl&gt; 4969326
+## $ PovertyPercent_2018_Max      &lt;dbl&gt; 43.1
+## $ CountChangeinPoverty_Max     &lt;dbl&gt; 103770
+## $ PercentChangeinPoverty_Max   &lt;dbl&gt; 1.3
+## $ Births_Max                   &lt;dbl&gt; 454920
+## $ Fertility_Rate_Max           &lt;dbl&gt; 73.6
+## $ Deaths_Max                   &lt;dbl&gt; 268189
+## $ Death_Rate_Max               &lt;dbl&gt; 1281.8
+## $ Territory_Var                &lt;dbl&gt; NA
+## $ PovertyCounts_2017_Var       &lt;dbl&gt; 985131315795
+## $ PovertyPercent_2017_Var      &lt;dbl&gt; 27.66267
+## $ PovertyCounts_2018_Var       &lt;dbl&gt; 946143834636
+## $ PovertyPercent_2018_Var      &lt;dbl&gt; 25.92586
+## $ CountChangeinPoverty_Var     &lt;dbl&gt; 1813149326
+## $ PercentChangeinPoverty_Var   &lt;dbl&gt; 0.2721255
+## $ Births_Var                   &lt;dbl&gt; 7464592890
+## $ Fertility_Rate_Var           &lt;dbl&gt; 44.95452
+## $ Deaths_Var                   &lt;dbl&gt; 3083803952
+## $ Death_Rate_Var               &lt;dbl&gt; 19103.13</code></pre>
+<pre class="r"><code>fullstats1 &lt;- joineddata.nona %&gt;% separate(Territory, into = c(&quot;Territory&quot;, 
+    &quot;Region&quot;), sep = &quot;_&quot;, convert = T)
+glimpse(fullstats1)</code></pre>
+<pre><code>## Observations: 51
+## Variables: 12
+## $ Territory              &lt;chr&gt; &quot;Alabama&quot;, &quot;Alaska&quot;, &quot;Arizona&quot;, &quot;Arkansas&quot;, &quot;C…
+## $ Region                 &lt;chr&gt; &quot;S&quot;, &quot;W&quot;, &quot;W&quot;, &quot;S&quot;, &quot;W&quot;, &quot;W&quot;, &quot;N&quot;, &quot;S&quot;, &quot;S&quot;, &quot;…
+## $ PovertyCounts_2017     &lt;dbl&gt; 802656, 80012, 1018935, 478365, 5160208, 56431…
+## $ PovertyPercent_2017    &lt;dbl&gt; 16.9, 11.1, 14.9, 16.4, 13.3, 10.3, 9.6, 16.6,…
+## $ PovertyCounts_2018     &lt;dbl&gt; 800422, 78620, 983499, 504504, 4969326, 537492…
+## $ PovertyPercent_2018    &lt;dbl&gt; 16.8, 10.9, 14.0, 17.2, 12.8, 9.6, 10.4, 16.2,…
+## $ CountChangeinPoverty   &lt;dbl&gt; -2234, -1392, -35436, 26139, -190882, -26820, …
+## $ PercentChangeinPoverty &lt;dbl&gt; -0.1, -0.2, -0.9, 0.8, -0.5, -0.7, 0.8, -0.4, …
+## $ Births                 &lt;dbl&gt; 57761, 10086, 80723, 37018, 454920, 62885, 347…
+## $ Fertility_Rate         &lt;dbl&gt; 60.9, 69.3, 58.6, 64.0, 56.2, 54.1, 51.8, 48.8…
+## $ Deaths                 &lt;dbl&gt; 53238, 4411, 57758, 32588, 268189, 38063, 3131…
+## $ Death_Rate             &lt;dbl&gt; 1092.1, 596.2, 823.2, 1084.7, 678.3, 678.8, 87…</code></pre>
+<pre class="r"><code>ratiobirthdeath &lt;- fullstats1 %&gt;% group_by(Region) %&gt;% mutate(Ratio_Births_to_Deaths = Births/Deaths) %&gt;% 
+    arrange(Ratio_Births_to_Deaths)
+glimpse(ratiobirthdeath)</code></pre>
+<pre><code>## Observations: 51
+## Variables: 13
+## Groups: Region [5]
+## $ Territory              &lt;chr&gt; &quot;Puerto Rico&quot;, &quot;West Virginia&quot;, &quot;Maine&quot;, &quot;Verm…
+## $ Region                 &lt;chr&gt; &quot;U&quot;, &quot;S&quot;, &quot;N&quot;, &quot;N&quot;, &quot;N&quot;, &quot;N&quot;, &quot;N&quot;, &quot;S&quot;, &quot;S&quot;, &quot;…
+## $ PovertyCounts_2017     &lt;dbl&gt; 1468798, 336301, 144012, 67841, 99966, 1548720…
+## $ PovertyPercent_2017    &lt;dbl&gt; 44.4, 19.1, 11.1, 11.3, 7.7, 12.5, 11.6, 16.9,…
+## $ PovertyCounts_2018     &lt;dbl&gt; 1363666, 312188, 151541, 66013, 100220, 151787…
+## $ PovertyPercent_2018    &lt;dbl&gt; 43.1, 17.8, 11.6, 11.0, 7.6, 12.2, 12.9, 16.8,…
+## $ CountChangeinPoverty   &lt;dbl&gt; -105132, -24113, 7529, -1828, 254, -30850, 128…
+## $ PercentChangeinPoverty &lt;dbl&gt; -1.3, -1.3, 0.5, -0.3, -0.1, -0.3, 1.3, -0.1, …
+## $ Births                 &lt;dbl&gt; 21424, 18248, 12311, 5432, 11995, 135673, 1050…
+## $ Fertility_Rate         &lt;dbl&gt; 34.8, 57.2, 53.3, 47.2, 49.1, 56.9, 50.5, 60.9…
+## $ Deaths                 &lt;dbl&gt; 30777, 23276, 14676, 6007, 12504, 135656, 1015…
+## $ Death_Rate             &lt;dbl&gt; 922.2, 1281.8, 1098.6, 963.2, 931.2, 1059.4, 9…
+## $ Ratio_Births_to_Deaths &lt;dbl&gt; 0.6961042, 0.7839835, 0.8388525, 0.9042783, 0.…</code></pre>
+<pre class="r"><code>overallbirthdeathstats &lt;- fullstats1 %&gt;% mutate(Ratio_Births_to_Deaths = Births/Deaths) %&gt;% 
+    summarize_all(list(Mean = mean, Stdev = sd, Var = var, Min = min, 
+        Max = max))
+glimpse(overallbirthdeathstats)</code></pre>
+<pre><code>## Observations: 1
+## Variables: 65
+## $ Territory_Mean               &lt;dbl&gt; NA
+## $ Region_Mean                  &lt;dbl&gt; NA
+## $ PovertyCounts_2017_Mean      &lt;dbl&gt; 861283.6
+## $ PovertyPercent_2017_Mean     &lt;dbl&gt; 13.73333
+## $ PovertyCounts_2018_Mean      &lt;dbl&gt; 845073.3
+## $ PovertyPercent_2018_Mean     &lt;dbl&gt; 13.51176
+## $ CountChangeinPoverty_Mean    &lt;dbl&gt; -16210.27
+## $ PercentChangeinPoverty_Mean  &lt;dbl&gt; -0.2215686
+## $ Births_Mean                  &lt;dbl&gt; 74559.12
+## $ Fertility_Rate_Mean          &lt;dbl&gt; 59.22941
+## $ Deaths_Mean                  &lt;dbl&gt; 55002
+## $ Death_Rate_Mean              &lt;dbl&gt; 900.7686
+## $ Ratio_Births_to_Deaths_Mean  &lt;dbl&gt; 1.347501
+## $ Territory_Stdev              &lt;dbl&gt; NA
+## $ Region_Stdev                 &lt;dbl&gt; NA
+## $ PovertyCounts_2017_Stdev     &lt;dbl&gt; 992537.8
+## $ PovertyPercent_2017_Stdev    &lt;dbl&gt; 5.259531
+## $ PovertyCounts_2018_Stdev     &lt;dbl&gt; 972699.3
+## $ PovertyPercent_2018_Stdev    &lt;dbl&gt; 5.091744
+## $ CountChangeinPoverty_Stdev   &lt;dbl&gt; 42581.09
+## $ PercentChangeinPoverty_Stdev &lt;dbl&gt; 0.5216565
+## $ Births_Stdev                 &lt;dbl&gt; 86397.88
+## $ Fertility_Rate_Stdev         &lt;dbl&gt; 6.704813
+## $ Deaths_Stdev                 &lt;dbl&gt; 55532.01
+## $ Death_Rate_Stdev             &lt;dbl&gt; 138.2141
+## $ Ratio_Births_to_Deaths_Stdev &lt;dbl&gt; 0.3685553
+## $ Territory_Var                &lt;dbl&gt; NA
+## $ Region_Var                   &lt;dbl&gt; NA
+## $ PovertyCounts_2017_Var       &lt;dbl&gt; 985131315795
+## $ PovertyPercent_2017_Var      &lt;dbl&gt; 27.66267
+## $ PovertyCounts_2018_Var       &lt;dbl&gt; 946143834636
+## $ PovertyPercent_2018_Var      &lt;dbl&gt; 25.92586
+## $ CountChangeinPoverty_Var     &lt;dbl&gt; 1813149326
+## $ PercentChangeinPoverty_Var   &lt;dbl&gt; 0.2721255
+## $ Births_Var                   &lt;dbl&gt; 7464592890
+## $ Fertility_Rate_Var           &lt;dbl&gt; 44.95452
+## $ Deaths_Var                   &lt;dbl&gt; 3083803952
+## $ Death_Rate_Var               &lt;dbl&gt; 19103.13
+## $ Ratio_Births_to_Deaths_Var   &lt;dbl&gt; 0.135833
+## $ Territory_Min                &lt;chr&gt; &quot;Alabama&quot;
+## $ Region_Min                   &lt;chr&gt; &quot;M&quot;
+## $ PovertyCounts_2017_Min       &lt;dbl&gt; 64054
+## $ PovertyPercent_2017_Min      &lt;dbl&gt; 7.7
+## $ PovertyCounts_2018_Min       &lt;dbl&gt; 62301
+## $ PovertyPercent_2018_Min      &lt;dbl&gt; 7.6
+## $ CountChangeinPoverty_Min     &lt;dbl&gt; -190882
+## $ PercentChangeinPoverty_Min   &lt;dbl&gt; -1.3
+## $ Births_Min                   &lt;dbl&gt; 5432
+## $ Fertility_Rate_Min           &lt;dbl&gt; 34.8
+## $ Deaths_Min                   &lt;dbl&gt; 4411
+## $ Death_Rate_Min               &lt;dbl&gt; 581.4
+## $ Ratio_Births_to_Deaths_Min   &lt;dbl&gt; 0.6961042
+## $ Territory_Max                &lt;chr&gt; &quot;Wyoming&quot;
+## $ Region_Max                   &lt;chr&gt; &quot;W&quot;
+## $ PovertyCounts_2017_Max       &lt;dbl&gt; 5160208
+## $ PovertyPercent_2017_Max      &lt;dbl&gt; 44.4
+## $ PovertyCounts_2018_Max       &lt;dbl&gt; 4969326
+## $ PovertyPercent_2018_Max      &lt;dbl&gt; 43.1
+## $ CountChangeinPoverty_Max     &lt;dbl&gt; 103770
+## $ PercentChangeinPoverty_Max   &lt;dbl&gt; 1.3
+## $ Births_Max                   &lt;dbl&gt; 454920
+## $ Fertility_Rate_Max           &lt;dbl&gt; 73.6
+## $ Deaths_Max                   &lt;dbl&gt; 268189
+## $ Death_Rate_Max               &lt;dbl&gt; 1281.8
+## $ Ratio_Births_to_Deaths_Max   &lt;dbl&gt; 2.617632</code></pre>
+<pre class="r"><code>birthdeathstats &lt;- ratiobirthdeath %&gt;% summarize(`Mean of 
+  Ratio_Births_to_Deaths` = mean(Ratio_Births_to_Deaths, 
+    na.rm = T), `Sd of Ratio_Births_to_Deaths` = sd(Ratio_Births_to_Deaths, 
+    na.rm = T), `Min of Ratio_Births_to_Deaths` = min(Ratio_Births_to_Deaths), 
+    `Max of Ratio_Births_to_Deaths` = max(Ratio_Births_to_Deaths))
+glimpse(birthdeathstats)</code></pre>
+<pre><code>## Observations: 5
+## Variables: 5
+## $ Region                               &lt;chr&gt; &quot;M&quot;, &quot;N&quot;, &quot;S&quot;, &quot;U&quot;, &quot;W&quot;
+## $ `Mean of \n  Ratio_Births_to_Deaths` &lt;dbl&gt; 1.4208986, 1.0922029, 1.2893594,…
+## $ `Sd of Ratio_Births_to_Deaths`       &lt;dbl&gt; 0.3254556, 0.2050622, 0.2897556,…
+## $ `Min of Ratio_Births_to_Deaths`      &lt;dbl&gt; 1.0928927, 0.8388525, 0.7839835,…
+## $ `Max of Ratio_Births_to_Deaths`      &lt;dbl&gt; 2.2985632, 1.4562366, 1.9112192,…</code></pre>
+<pre class="r"><code>fullstats2 &lt;- fullstats1 %&gt;% group_by(Region) %&gt;% summarize_all(list(Mean = mean, 
+    Stdev = sd, Min = min, Max = max, Var = var)) %&gt;% select(-Territory_Mean, 
+    -Territory_Stdev, -Territory_Var)
+glimpse(fullstats2)</code></pre>
+<pre><code>## Observations: 5
+## Variables: 53
+## $ Region                       &lt;chr&gt; &quot;M&quot;, &quot;N&quot;, &quot;S&quot;, &quot;U&quot;, &quot;W&quot;
+## $ PovertyCounts_2017_Mean      &lt;dbl&gt; 700239.9, 734462.8, 1103556.2, 1468798.0…
+## $ PovertyPercent_2017_Mean     &lt;dbl&gt; 12.10000, 10.93333, 15.63125, 44.40000, …
+## $ PovertyCounts_2018_Mean      &lt;dbl&gt; 694455.2, 712852.0, 1096940.3, 1363666.0…
+## $ PovertyPercent_2018_Mean     &lt;dbl&gt; 12.08333, 10.97778, 15.36875, 43.10000, …
+## $ CountChangeinPoverty_Mean    &lt;dbl&gt; -5784.750, -21610.778, -6615.938, -10513…
+## $ PercentChangeinPoverty_Mean  &lt;dbl&gt; -0.01666667, 0.04444444, -0.26250000, -1…
+## $ Births_Mean                  &lt;dbl&gt; 66533.42, 67468.00, 92263.19, 21424.00, …
+## $ Fertility_Rate_Mean          &lt;dbl&gt; 63.85833, 52.92222, 60.10000, 34.80000, …
+## $ Deaths_Mean                  &lt;dbl&gt; 51198.17, 55479.89, 68553.38, 30777.00, …
+## $ Death_Rate_Mean              &lt;dbl&gt; 928.7667, 928.2778, 961.3250, 922.2000, …
+## $ PovertyCounts_2017_Stdev     &lt;dbl&gt; 550283.9, 892576.2, 1019715.0, NA, 13551…
+## $ PovertyPercent_2017_Stdev    &lt;dbl&gt; 1.568439, 1.815902, 2.856272, NA, 2.6832…
+## $ PovertyCounts_2018_Stdev     &lt;dbl&gt; 537619.2, 848839.0, 1034286.4, NA, 13044…
+## $ PovertyPercent_2018_Stdev    &lt;dbl&gt; 1.410888, 1.848498, 2.736596, NA, 2.7839…
+## $ CountChangeinPoverty_Stdev   &lt;dbl&gt; 19976.98, 47691.76, 39818.29, NA, 51487.…
+## $ PercentChangeinPoverty_Stdev &lt;dbl&gt; 0.3069893, 0.6616478, 0.5162364, NA, 0.4…
+## $ Births_Stdev                 &lt;dbl&gt; 45271.14, 75238.55, 91831.24, NA, 118835…
+## $ Fertility_Rate_Stdev         &lt;dbl&gt; 5.151074, 4.450499, 4.001333, NA, 5.1849…
+## $ Deaths_Stdev                 &lt;dbl&gt; 39904.67, 56333.42, 56107.67, NA, 69883.…
+## $ Death_Rate_Stdev             &lt;dbl&gt; 76.17502, 104.36274, 158.51173, NA, 115.…
+## $ Territory_Min                &lt;chr&gt; &quot;Illinois&quot;, &quot;Connecticut&quot;, &quot;Alabama&quot;, &quot;P…
+## $ PovertyCounts_2017_Min       &lt;dbl&gt; 75279, 67841, 109920, 1468798, 64054
+## $ PovertyPercent_2017_Min      &lt;dbl&gt; 9.5, 7.7, 9.3, 44.4, 9.5
+## $ PovertyCounts_2018_Min       &lt;dbl&gt; 78676, 66013, 108055, 1363666, 62301
+## $ PovertyPercent_2018_Min      &lt;dbl&gt; 9.6, 7.6, 9.0, 43.1, 8.8
+## $ CountChangeinPoverty_Min     &lt;dbl&gt; -60506, -130866, -55413, -105132, -190882
+## $ PercentChangeinPoverty_Min   &lt;dbl&gt; -0.5, -0.5, -1.3, -1.3, -1.0
+## $ Births_Min                   &lt;dbl&gt; 10636, 5432, 9212, 21424, 6562
+## $ Fertility_Rate_Min           &lt;dbl&gt; 57.5, 47.2, 48.8, 34.8, 51.4
+## $ Deaths_Min                   &lt;dbl&gt; 6415, 6007, 4965, 30777, 4411
+## $ Death_Rate_Min               &lt;dbl&gt; 795.7, 782.7, 699.9, 922.2, 581.4
+## $ Territory_Max                &lt;chr&gt; &quot;Wisconsin&quot;, &quot;Vermont&quot;, &quot;West Virginia&quot;,…
+## $ PovertyCounts_2017_Max       &lt;dbl&gt; 1582931, 2722257, 4076905, 1468798, 5160…
+## $ PovertyPercent_2017_Max      &lt;dbl&gt; 14.2, 14.1, 19.8, 44.4, 19.7
+## $ PovertyCounts_2018_Max       &lt;dbl&gt; 1578673, 2591391, 4180675, 1363666, 4969…
+## $ PovertyPercent_2018_Max      &lt;dbl&gt; 14.1, 13.6, 19.7, 43.1, 19.5
+## $ CountChangeinPoverty_Max     &lt;dbl&gt; 16868, 27249, 103770, -105132, 7337
+## $ PercentChangeinPoverty_Max   &lt;dbl&gt; 0.5, 1.3, 0.8, -1.3, 0.5
+## $ Births_Max                   &lt;dbl&gt; 144815, 226238, 378624, 21424, 454920
+## $ Fertility_Rate_Max           &lt;dbl&gt; 73.6, 60.1, 64.6, 34.8, 69.3
+## $ Deaths_Max                   &lt;dbl&gt; 123648, 155358, 203636, 30777, 268189
+## $ Death_Rate_Max               &lt;dbl&gt; 1060.6, 1098.6, 1281.8, 922.2, 971.0
+## $ PovertyCounts_2017_Var       &lt;dbl&gt; 3.028123e+11, 7.966922e+11, 1.039819e+12…
+## $ PovertyPercent_2017_Var      &lt;dbl&gt; 2.460000, 3.297500, 8.158292, NA, 7.1997…
+## $ PovertyCounts_2018_Var       &lt;dbl&gt; 2.890344e+11, 7.205277e+11, 1.069748e+12…
+## $ PovertyPercent_2018_Var      &lt;dbl&gt; 1.990606, 3.416944, 7.488958, NA, 7.7502…
+## $ CountChangeinPoverty_Var     &lt;dbl&gt; 399079596, 2274504361, 1585496463, NA, 2…
+## $ PercentChangeinPoverty_Var   &lt;dbl&gt; 0.09424242, 0.43777778, 0.26650000, NA, …
+## $ Births_Var                   &lt;dbl&gt; 2049475714, 5660839375, 8432977558, NA, …
+## $ Fertility_Rate_Var           &lt;dbl&gt; 26.53356, 19.80694, 16.01067, NA, 26.883…
+## $ Deaths_Var                   &lt;dbl&gt; 1592382735, 3173454677, 3148071111, NA, …
+## $ Death_Rate_Var               &lt;dbl&gt; 5802.633, 10891.582, 25125.970, NA, 1345…</code></pre>
+<pre class="r"><code>corofdata &lt;- joineddata.nona %&gt;% select_if(is.numeric)
+cor(corofdata)</code></pre>
+<pre><code>##                        PovertyCounts_2017 PovertyPercent_2017
+## PovertyCounts_2017              1.0000000          0.17753578
+## PovertyPercent_2017             0.1775358          1.00000000
+## PovertyCounts_2018              0.9992648          0.16874651
+## PovertyPercent_2018             0.1641414          0.99544490
+## CountChangeinPoverty           -0.4826953         -0.28349140
+## PercentChangeinPoverty         -0.1878417         -0.36610351
+## Births                          0.9757582         -0.01968888
+## Fertility_Rate                 -0.1092359         -0.39774647
+## Deaths                          0.9606743          0.02243737
+## Death_Rate                     -0.1849333          0.27488639
+##                        PovertyCounts_2018 PovertyPercent_2018
+## PovertyCounts_2017             0.99926480         0.164141419
+## PovertyPercent_2017            0.16874651         0.995444896
+## PovertyCounts_2018             1.00000000         0.157236916
+## PovertyPercent_2018            0.15723692         1.000000000
+## CountChangeinPoverty          -0.44876379        -0.234196314
+## PercentChangeinPoverty        -0.16661800        -0.275716188
+## Births                         0.97791042        -0.032550694
+## Fertility_Rate                -0.09875311        -0.391460720
+## Deaths                         0.96060088         0.008595851
+## Death_Rate                    -0.18105379         0.301434517
+##                        CountChangeinPoverty PercentChangeinPoverty       Births
+## PovertyCounts_2017               -0.4826953             -0.1878417  0.975758246
+## PovertyPercent_2017              -0.2834914             -0.3661035 -0.019688881
+## PovertyCounts_2018               -0.4487638             -0.1666180  0.977910420
+## PovertyPercent_2018              -0.2341963             -0.2757162 -0.032550694
+## CountChangeinPoverty              1.0000000              0.5723386 -0.405443441
+## PercentChangeinPoverty            0.5723386              1.0000000 -0.119207809
+## Births                           -0.4054434             -0.1192078  1.000000000
+## Fertility_Rate                    0.2903572              0.1892856 -0.005978957
+## Deaths                           -0.4492553             -0.1423200  0.961190078
+## Death_Rate                        0.1747824              0.1707138 -0.260188769
+##                        Fertility_Rate       Deaths  Death_Rate
+## PovertyCounts_2017       -0.109235942  0.960674269 -0.18493332
+## PovertyPercent_2017      -0.397746470  0.022437367  0.27488639
+## PovertyCounts_2018       -0.098753110  0.960600884 -0.18105379
+## PovertyPercent_2018      -0.391460720  0.008595851  0.30143452
+## CountChangeinPoverty      0.290357223 -0.449255270  0.17478242
+## PercentChangeinPoverty    0.189285601 -0.142320008  0.17071377
+## Births                   -0.005978957  0.961190078 -0.26018877
+## Fertility_Rate            1.000000000 -0.061065722 -0.06796124
+## Deaths                   -0.061065722  1.000000000 -0.11669314
+## Death_Rate               -0.067961244 -0.116693140  1.00000000</code></pre>
+<p>The six dplyr functions were used to generate summary statistics such as mean, standard deviation, variation, minimum, and maximum. The overall mean, standard deviation, variation, minimum, and maximum were found for all US states/territories using the summarize_all() (assigned to “fullstats”). The same summary statistics for each US region were found using group_by() and summarize_all() (assigned to “fullstats2”). Based on this, it was found that the Southern region had a higher mean percent poverty in 2017 and 2018, higher mean poverty counts in 2017 and 2018, and higher mean births and deaths compared to that of the entire US. The US Territory, Puerto Rico, also had a higher mean poverty percentage and poverty counts in 2017 and 2018 compared to that of the whole US. All US regions except for the Northeastern states and Puerto Rico (US Territory) had higher fertility rates compared to the overall mean fertility rate in the US. Likewise, the Northeastern and the Southern states had higher death counts in 2018 compared to the mean death count for the entire US.</p>
+<p>In addition, the new variable ratio of births to deaths, was added by mutate(). Arrange() was then used to observe individual birth to death ratios for each state/US territory in ascending order. Arrange() showed that Puerto Rico, West Virgina, Maine, Vermont, and New Hampshire were the top 5 states/territories with low birth to death counts, meaning that there were more deaths than births in these states. The group_by() and summarize() were used to find the mean birth to death ratios for each US region (assigned to “birthdeathstats), and the overall mean birth to death ratio for the whole US was found using summarize_all() (assigned to”overallbirthdeathstats“). Using”birthdeathstats&quot; and “overallbirthdeathstats”, the Midwestern and Western regions had a higher mean birth to death ratio compared to the overall mean birth to death ratio in the US. This shows how states in the Midwestern and Western regions most likely experienced an increased population growth in 2017 compared to other US states and territories.</p>
+</div>
+<div id="visualizing-30-points" class="section level1">
+<h1>Visualizing (30 points)</h1>
+<pre class="r"><code>tidy &lt;- cor(corofdata) %&gt;% as.data.frame %&gt;% rownames_to_column %&gt;% 
+    pivot_longer(-1, names_to = &quot;name&quot;, values_to = &quot;correlation&quot;)
+glimpse(tidy)</code></pre>
+<pre><code>## Observations: 100
+## Variables: 3
+## $ rowname     &lt;chr&gt; &quot;PovertyCounts_2017&quot;, &quot;PovertyCounts_2017&quot;, &quot;PovertyCount…
+## $ name        &lt;chr&gt; &quot;PovertyCounts_2017&quot;, &quot;PovertyPercent_2017&quot;, &quot;PovertyCoun…
+## $ correlation &lt;dbl&gt; 1.00000000, 0.17753578, 0.99926480, 0.16414142, -0.482695…</code></pre>
+<pre class="r"><code>tidy %&gt;% ggplot(aes(rowname, name, fill = correlation)) + geom_tile() + 
+    scale_fill_gradient2(low = &quot;white&quot;, mid = &quot;orange&quot;, high = &quot;red&quot;) + 
+    geom_text(aes(label = round(correlation, 2))) + geom_text(aes(label = round(correlation, 
+    2))) + xlab(&quot;&quot;) + ylab(&quot;&quot;) + theme(axis.text.x = element_text(angle = 90, 
+    hjust = 1)) + ggtitle(&quot;Heatmap to Examine Correlations between Variables&quot;)</code></pre>
+<p><img src="/project1_files/figure-html/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>The heatmap is used to visualize the correlation between different variables. A gradient legend is found on the right hand side to help explain the level of correlation between two different variables, red being the highest correlation. A correlation value closer to 1 is stronger than a correlation value that is closer to 0. Based on this information, it is clear that there is a strong correlation between poverty counts in 2017 and births in 2017, poverty counts in 2018 and births in 2017, poverty counts in 2017 and deaths in 2018, poverty counts in 2018 and deaths in 2018, births in 2017 and deaths in 2018, poverty counts in 2017 and 2018, and poverty percent in 2017 and 2018.</p>
+<pre class="r"><code>ggplot(fullstats2, aes(Births_Max, PovertyCounts_2017_Max, color = Region)) + 
+    geom_point(size = 3) + scale_y_continuous(name = &quot;Maximum Poverty Counts in 2017&quot;, 
+    lim = c(0, 6e+06), breaks = c(0, 5e+05, 1e+06, 1500000, 2e+06, 
+        2500000, 3e+06, 3500000, 4e+06, 4500000, 5e+06, 5500000, 
+        6e+06)) + ggtitle(&quot;Maximum Poverty Counts vs Maximum Births in 2017&quot;) + 
+    scale_x_continuous(name = &quot;Maximum Births in 2017&quot;, lim = c(0, 
+        5e+05), breaks = c(0, 50000, 1e+05, 150000, 2e+05, 250000, 
+        3e+05, 350000, 4e+05, 450000, 5e+05)) + scale_color_manual(name = &quot;Region&quot;, 
+    labels = c(&quot;Northeastern&quot;, &quot;Southern&quot;, &quot;Midwestern&quot;, &quot;US Territories&quot;, 
+        &quot;Western&quot;), values = c(&quot;pink&quot;, &quot;purple&quot;, &quot;magenta&quot;, &quot;light blue&quot;, 
+        &quot;salmon&quot;)) + theme(axis.text.x = element_text(angle = 45, 
+    hjust = 1))</code></pre>
+<p><img src="/project1_files/figure-html/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Based on the correlations obtained from the heatmap, the ggplot illustrates the possible relationship between maximum poverty counts in 2017 and maximum births in 2017. Simply from the above graph, the Western regions of the US had the highest maximum birth counts and the highest maximum poverty counts in 2017. Likewise, Midwestern regions of the US had the second greatest maximum birth counts and poverty counts in 2017, and the Northeastern region had the second to last maximum poverty and birth counts in 2017 compared to the other US regions. The Southern region had the third maximum birth counts and poverty counts in 2017, while US Territories such as Puerto Rico had the least maximum birth count but approximately the same maximum poverty counts as the Northeastern region. This plot helps visualize how different regions in the US have different maximum poverty counts and maximum birth counts. It is also clear that the more Western a US state is, the more likely it is to have a higher poverty and birth count, especially in 2017. While it is expected that as the birth counts increases, the poverty counts should also increase, US territories such as Puerto Rico are an exception to this rule.</p>
+<pre class="r"><code>ggplot(fullstats1, aes(x = Territory, y = PovertyCounts_2018, 
+    fill = Region)) + geom_bar(stat = &quot;summary&quot;) + theme(axis.text.x = element_text(angle = 90, 
+    hjust = 1)) + xlab(&quot;US States&quot;) + ylab(&quot;Poverty Counts in 2018&quot;) + 
+    ggtitle(&quot;Poverty Counts in US States in 2018 Based on Region&quot;) + 
+    scale_fill_manual(name = &quot;Region&quot;, labels = c(&quot;Midwestern&quot;, 
+        &quot;Northeastern&quot;, &quot;Southern&quot;, &quot;US Territory&quot;, &quot;Western&quot;), 
+        values = c(&quot;magenta&quot;, &quot;pink&quot;, &quot;purple&quot;, &quot;light blue&quot;, 
+            &quot;salmon&quot;))</code></pre>
+<p><img src="/project1_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>The above bar plot details the poverty counts in 2018 based on both state and region. There are 5 different regions as shown in the legend, each containing a group of states or territories. The goal of this plot is to see if there’s a relationship between region and poverty counts in 2018. Overall, California, Texas, Florida, and New York have the highest poverty counts in 2018. This is to be expected since all four states have large populations. While we can pinpoint which states have the highest poverty counts in which region, we cannot be certain of which entire region has the greatest poverty counts in 2018. This is because, for example, in the Western region, California has the highest poverty count, but this does not mean that all of the states in this region have high poverty counts. This bar chart clearly indicates which states of different US regions have the highest poverty counts in 2018. The Western state with the highest poverty count in 2018 is California. Likewise, the Northeastern state with the highest poverty count in 2018 is New Mexico. The Southern state with the highest poverty count is Texas followed by Florida. Overall, it seems as though the Midwestern states all have relatively lower poverty counts compared to other US regions. In addition, the only US territory on this bar graph is Puerto Rico, which has a relatively lower poverty count compared to Texas, Florida, California, and other highly populous states.</p>
+<pre class="r"><code>ggplot(fullstats1, aes(Territory, Births)) + geom_point(size = 2, 
+    aes(color = Deaths)) + scale_color_gradient(low = &quot;light pink&quot;, 
+    high = &quot;magenta&quot;) + theme(axis.text.x = element_text(angle = 90, 
+    hjust = 1)) + xlab(&quot;US States&quot;) + ylab(&quot;Births in 2017&quot;) + 
+    ggtitle(&quot;Birth Counts in 2017 Relationship with Death Counts in 2018 
+  Per US State&quot;)</code></pre>
+<p><img src="/project1_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>This scatterplot examines the relationship between birth counts in 2017 and death counts in 2018 for various states and Puerto Rico, a US territory. In general, the main trend that is clear in this scatterplot is that the greater the birth counts in 2017, the greater the death counts in 2018. The states with the highest birth counts also were the states that had the highest death counts the subsequent year. This makes sense because larger, highly populous states are likely to have high birth counts as well as high death counts. The states with very high birth and death counts were California, Texas, New York, and Florida; these are also the states that are highly populated.</p>
+</div>
+<div id="dimensionality-reduction-20-points" class="section level1">
+<h1>Dimensionality Reduction (20 points)</h1>
+<pre class="r"><code>library(cluster)
+library(GGally)
+
+# helps generate silhouette values for different k values
+# from 2 to 10 for four numeric variables in select()
+silhouette &lt;- vector()
+for (i in 2:10) {
+    pamdat &lt;- fullstats1 %&gt;% select(PovertyPercent_2017, PovertyPercent_2018, 
+        Births, Deaths) %&gt;% pam(i)
+    silhouette[i] &lt;- pamdat$silinfo$avg.width
+}
+
+# plots silhouette for each k value to determine the cluster
+# number to choose
+ggplot() + geom_line(aes(x = 1:10, y = silhouette)) + scale_x_continuous(name = &quot;k&quot;, 
+    breaks = 1:10)</code></pre>
+<p><img src="/project1_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># used the cluster number of k=2 to generate clusters for
+# four variables and assigned to pam1
+pam1 &lt;- fullstats1 %&gt;% select(PovertyPercent_2017, PovertyPercent_2018, 
+    Births, Deaths) %&gt;% pam(k = 2)
+
+# assigned data with only four numeric variables to pam3
+pam3 &lt;- fullstats1 %&gt;% select(PovertyPercent_2017, PovertyPercent_2018, 
+    Births, Deaths)
+
+# gets visual of the pairwise combination of four numeric
+# variables with 2 clusters
+pam3 %&gt;% mutate(cluster = as.factor(pam1$clustering)) %&gt;% ggpairs(columns = 1:4, 
+    aes(color = cluster))</code></pre>
+<p><img src="/project1_files/figure-html/unnamed-chunk-8-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># gets the average silhouette width, shows reasonable
+# structure
+plot(pam1, which = 2)</code></pre>
+<p><img src="/project1_files/figure-html/unnamed-chunk-8-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># used to determine which state/territory belongs to which
+# cluster (either 1 or 2)
+clust1and2 &lt;- fullstats1 %&gt;% mutate(cluster = as.factor(pam1$clustering)) %&gt;% 
+    select(Territory, cluster, everything())
+head(clust1and2)</code></pre>
+<pre><code>## # A tibble: 6 x 13
+##   Territory cluster Region PovertyCounts_2… PovertyPercent_… PovertyCounts_2…
+##   &lt;chr&gt;     &lt;fct&gt;   &lt;chr&gt;             &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;
+## 1 Alabama   1       S                802656             16.9           800422
+## 2 Alaska    1       W                 80012             11.1            78620
+## 3 Arizona   1       W               1018935             14.9           983499
+## 4 Arkansas  1       S                478365             16.4           504504
+## 5 Californ… 2       W               5160208             13.3          4969326
+## 6 Colorado  1       W                564312             10.3           537492
+## # … with 7 more variables: PovertyPercent_2018 &lt;dbl&gt;,
+## #   CountChangeinPoverty &lt;dbl&gt;, PercentChangeinPoverty &lt;dbl&gt;, Births &lt;dbl&gt;,
+## #   Fertility_Rate &lt;dbl&gt;, Deaths &lt;dbl&gt;, Death_Rate &lt;dbl&gt;</code></pre>
+<p>The major steps in cluster analysis includes processing data, choosing the number of clusters, running cluster analysis, interpreting clusters and overall fit, and finally visualizing clusters. The four numeric variables that were analyzed through PAM are the poverty percent in 2017, the poverty percent in 2018, birth counts in 2017, and death counts in 2018. A cluster value of 2 was chosen. Cluster 1 includes small/and or less populous states, such as Alaska. Cluster 2 includes large and/or more populous states, such as California, as compared to cluster 1. Using ggpairs(), it was found that cluster 2 states are more likely to have higher birth and death counts in comparison to the states in cluster 1 and cluster 2 has greater variation/spread for birth and death counts. Cluster 1 is more likely to have smaller birth and death counts and has less state by state variation/spread. The poverty percents in 2017 and 2018, however, show that cluster 2 has less variation for the percent of the state population in poverty. On the other hand, cluster 1 has slightly more state by state variation for the percentage of state populations in poverty for 2017 and 2018. Lastly, the average silhouette width was calculated and shows that there is a reasonable structure that has been found.</p>
+</div>

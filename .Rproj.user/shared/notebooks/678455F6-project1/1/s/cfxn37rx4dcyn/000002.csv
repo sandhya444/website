@@ -1,0 +1,10 @@
+"0","library(dplyr)
+library(tidyr)
+library(tidyverse)
+library(ggplot2)
+library(readxl)
+
+birthdeath <- read_excel(""~/Desktop/Project/birthdeath.xlsx"")
+"
+"2","Error: `path` does not exist: ‘~/Desktop/Project/birthdeath.xlsx’
+"

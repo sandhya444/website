@@ -1,0 +1,227 @@
+---
+title: 'Project 1: Exploratory Analysis'
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = TRUE, fig.align = "center", warning = F, message = F,
+tidy=TRUE, tidy.opts=list(width.cutoff=60), R.options=list(max.print=100))
+```
+
+Sandhya Srinivasa, ss64834
+
+# Introduction (4 points)
+
+My two datasets include a poverty dataset and a birth and death dataset.  The variables in the poverty dataset are poverty counts and percents in 2017 and 2018 by US state or territory (includes Puerto Rico, etc).  The variables in the birth and death dataset are fertility rates, birth counts in 2017, death rate, and death counts in 2018 by US state or territory.  These datasets were found online in the United States Census Bureau and the Center for Disease Control websites.  These two datasets helped me explore my interest in sociology.  As a Texan, I am aware of how Texas has a large poverty count, large population size, and has relatively high birth and death rates.  However, I have always been curious of a potential relationship between poverty and fertility and death rates in not only Texas, but other US states and territories. Based on my own knowledge, I expect poverty counts to rise with increasing fertility and death rates.  I also believe that the more highly populated a state is, the higher the poverty, birth, and death counts.  
+
+## Sources for datasets:
+https://www.cdc.gov/nchs/fastats/state-and-territorial-data.htm
+https://www.census.gov/content/dam/Census/library/publications/2019/acs/acsbr18-02.pdf (used Table 1 only - removed margin of error columns)
+
+# Tidying: Rearranging Wide/Long (8 points)
+```{r}
+library(dplyr)
+library(tidyr)
+library(tidyverse)
+library(ggplot2)
+library(readxl)
+
+birthdeath <- read_excel("~/Desktop/Project1/birthdeath.xlsx")
+glimpse(birthdeath)
+finalbirthdeath <- birthdeath %>% select(-...6)
+glimpse(finalbirthdeath)
+
+longerbirthdeath <- finalbirthdeath %>% pivot_longer(cols = c("Births", 
+  "Fertility_Rate", "Deaths", "Death_Rate"), names_to = "Population Stats", 
+  values_to = "Value") 
+glimpse(longerbirthdeath)
+
+widerbirthdeath <- longerbirthdeath %>% pivot_wider(names_from = 
+  "Population Stats", values_from = "Value")
+glimpse(widerbirthdeath)
+
+finalpoverty <- read_excel("~/Desktop/Project1/poverty.xlsx") 
+glimpse(finalpoverty)
+
+longerpoverty <- finalpoverty %>% pivot_longer(cols = c("PovertyCounts_2017",
+  "PovertyPercent_2017", "PovertyCounts_2018", 
+  "PovertyPercent_2018","CountChangeinPoverty", "PercentChangeinPoverty"),
+  names_to = "Population Poverty Stats",values_to = "Values")
+glimpse(longerpoverty)
+
+widerpoverty <- longerpoverty %>% pivot_wider(names_from = 
+  `Population Poverty Stats`, values_from = "Values")
+glimpse(widerpoverty)
+```
+
+My two datasets were already wide, however, I still used pivot_longer() followed by pivot_wider().  The pivot_longer() function was used to convert wide data into long data.  Both datasets were wide because each variable had its own column, which is not the case with long data.  Before using pivot_longer(), unnecessary columns were removed from the "birthdeath" dataset using select() and the final dataset was assigned to "finalbirthdeath".  Then, the datasets were converted into long data using pivot_longer().  All variable names in "finalbirthdeath" were placed under the "Population Stats" column and all values for these variables were placed under the "Value" column.  Likewise, all variable names in "finalpoverty" were placed under the "Population Poverty Stats" column and all values for these variables were placed under the "Values" column.  These newly long datas were assigned to "longerbirthdeath" and "longerpoverty". Pivot_wider() was used to convert "longerbirthdeath" and "longerpoverty" back into wide data, and both were assigned to "widerbirthdeath" and "widerpoverty" respecfully.  Now, all of the variable names under the "Population Poverty Stats" and "Population Stats" columns would have their own columns with their values in their column.  
+
+# Joining/Merging (8 points)
+```{r}
+joineddata <- full_join(widerpoverty, widerbirthdeath, by = "Territory")
+glimpse(joineddata)
+
+joineddata.nona <- joineddata %>% na.omit() 
+glimpse(joineddata.nona)
+```
+
+Both "widerpoverty" and "widerbirthdeath" were combined using a shared column between the two, "Territory".  Full_join() was used to completely join both datasets together.  I felt that it was not necessary to only match the values in both datasets using inner_join() because it would exclude unmatched values from both datasets. I also felt that it was unnecessary to use left_join() or right_join() because, once again, it would exclude unmatched values from one of the datasets.  Instead, my goal was to keep all of my values for the different columns in both datasets.  Thus, my only option was full_join().  After using full_join() to completely join the datasets, I used na.omit() to remove any NAs in the new dataset.  The problem with removing these NAs is that I will be losing data for poverty and birth and death counts from Delaware, the Virgin Islands, Guam, American Samoa, and the Northern Marianas. Most of these territories and states did not have NAs for all variables, rather only for some; so, it is possible that these states and territories could be significant when calculating summary statistics for other variables other than the ones they had NAs for, using ggplot(), or even when using PAM.    
+
+# Wrangling (40 points)
+```{r}
+fertilityrate <- joineddata.nona %>% filter(`Fertility_Rate` > 65) %>% 
+  summarize_all(list("Mean" = mean, "Stdev" = sd, "Min" = min, 
+  "Max"= max, "Var" = var))
+glimpse(fertilityrate)
+
+fullstats <- joineddata.nona %>% 
+  summarize_all(list("Mean" = mean, "Stdev" = sd, "Min" = min, 
+  "Max"= max, "Var" = var))
+glimpse(fullstats)
+
+fullstats1 <- joineddata.nona %>% 
+  separate(Territory, into = c("Territory", "Region"), sep = "_", convert = T) 
+glimpse(fullstats1)
+
+ratiobirthdeath <- fullstats1 %>% group_by(Region) %>%
+  mutate("Ratio_Births_to_Deaths" = Births/Deaths) %>% 
+  arrange(Ratio_Births_to_Deaths)
+glimpse(ratiobirthdeath)
+
+overallbirthdeathstats <- fullstats1 %>% 
+  mutate("Ratio_Births_to_Deaths" = Births/Deaths) %>% 
+  summarize_all(list("Mean" = mean, "Stdev" = sd, "Var" = var, 
+  "Min" = min, "Max" = max))
+glimpse(overallbirthdeathstats)
+
+birthdeathstats <- ratiobirthdeath %>% summarize("Mean of 
+  Ratio_Births_to_Deaths" = mean(Ratio_Births_to_Deaths, na.rm = T), 
+  "Sd of Ratio_Births_to_Deaths" = sd(Ratio_Births_to_Deaths, na.rm = T),
+  "Min of Ratio_Births_to_Deaths" = min(Ratio_Births_to_Deaths), 
+  "Max of Ratio_Births_to_Deaths" = max(Ratio_Births_to_Deaths))
+glimpse(birthdeathstats)
+
+fullstats2<- fullstats1 %>% 
+  group_by(Region) %>% 
+  summarize_all(list("Mean" = mean, "Stdev" = sd, "Min" = min, 
+  "Max"= max, "Var" = var)) %>% 
+  select(-Territory_Mean, -Territory_Stdev, -Territory_Var)
+glimpse(fullstats2)
+
+corofdata <- joineddata.nona %>% select_if(is.numeric) 
+cor(corofdata)
+```
+
+The six dplyr functions were used to generate summary statistics such as mean, standard deviation, variation, minimum, and maximum.  The overall mean, standard deviation, variation, minimum, and maximum were found for all US states/territories using the summarize_all() (assigned to "fullstats").  The same summary statistics for each US region were found using group_by() and summarize_all() (assigned to "fullstats2").  Based on this, it was found that the Southern region had a higher mean percent poverty in 2017 and 2018, higher mean poverty counts in 2017 and 2018, and higher mean births and deaths compared to that of the entire US.  The US Territory, Puerto Rico, also had a higher mean poverty percentage and poverty counts in 2017 and 2018 compared to that of the whole US.  All US regions except for the Northeastern states and Puerto Rico (US Territory) had higher fertility rates compared to the overall mean fertility rate in the US.  Likewise, the Northeastern and the Southern states had higher death counts in 2018 compared to the mean death count for the entire US.  
+
+In addition, the new variable ratio of births to deaths, was added by mutate().  Arrange() was then used to observe individual birth to death ratios for each state/US territory in ascending order.  Arrange() showed that Puerto Rico, West Virgina, Maine, Vermont, and New Hampshire were the top 5 states/territories with low birth to death counts, meaning that there were more deaths than births in these states.  The group_by() and summarize() were used to find the mean birth to death ratios for each US region (assigned to "birthdeathstats), and the overall mean birth to death ratio for the whole US was found using summarize_all() (assigned to "overallbirthdeathstats").  Using "birthdeathstats" and "overallbirthdeathstats", the Midwestern and Western regions had a higher mean birth to death ratio compared to the overall mean birth to death ratio in the US.  This shows how states in the Midwestern and Western regions most likely experienced an increased population growth in 2017 compared to other US states and territories.  
+
+# Visualizing (30 points)
+```{r}
+tidy <- cor(corofdata)%>%as.data.frame%>%rownames_to_column%>%
+  pivot_longer(-1,names_to="name",values_to="correlation")
+glimpse(tidy)
+
+tidy%>%ggplot(aes(rowname,name,fill=correlation))+ geom_tile() +
+  scale_fill_gradient2(low="white",mid="orange",high="red") +
+  geom_text(aes(label=round(correlation,2)))+ 
+  geom_text(aes(label= round(correlation, 2))) +
+  xlab("") + ylab("") + 
+  theme(axis.text.x = element_text(angle=90, hjust=1)) + 
+  ggtitle("Heatmap to Examine Correlations between Variables")
+```
+
+The heatmap is used to visualize the correlation between different variables.  A gradient legend is found on the right hand side to help explain the level of correlation between two different variables, red being the highest correlation.  A correlation value closer to 1 is stronger than a correlation value that is closer to 0.  Based on this information, it is clear that there is a strong correlation between poverty counts in 2017 and births in 2017, poverty counts in 2018 and births in 2017, poverty counts in 2017 and deaths in 2018, poverty counts in 2018 and deaths in 2018, births in 2017 and deaths in 2018, poverty counts in 2017 and 2018, and poverty percent in 2017 and 2018.  
+
+```{r}
+ggplot(fullstats2, aes(Births_Max, PovertyCounts_2017_Max, color = Region))+
+  geom_point(size = 3) +
+  scale_y_continuous(name = "Maximum Poverty Counts in 2017", lim = 
+  c(0,6e+06), breaks = c(0, 5e+05, 1e+06, 1.5e+06, 2e+06, 2.5e+06, 3e+06, 
+  3.5e+06, 4e+06, 4.5e+06, 5e+06, 5.5e+06, 6e+06)) + 
+  ggtitle("Maximum Poverty Counts vs Maximum Births in 2017") + 
+  scale_x_continuous(name = "Maximum Births in 2017", lim = 
+  c(0, 5e+05), breaks = c(0, 50000, 100000, 150000, 200000, 250000, 
+  300000, 350000, 400000, 450000, 500000))+ 
+  scale_color_manual(name = "Region", labels = c("Northeastern", 
+  "Southern", "Midwestern", "US Territories", "Western"), values = 
+  c("pink", "purple","magenta", "light blue", "salmon"))  + 
+  theme(axis.text.x = element_text(angle=45, hjust=1))
+
+```
+
+Based on the correlations obtained from the heatmap, the ggplot illustrates the possible relationship between maximum poverty counts in 2017 and maximum births in 2017.  Simply from the above graph, the Western regions of the US had the highest maximum birth counts and the highest maximum poverty counts in 2017.  Likewise, Midwestern regions of the US had the second greatest maximum birth counts and poverty counts in 2017, and the Northeastern region had the second to last maximum poverty and birth counts in 2017 compared to the other US regions.  The Southern region had the third maximum birth counts and poverty counts in 2017, while US Territories such as Puerto Rico had the least maximum birth count but approximately the same maximum poverty counts as the Northeastern region.  This plot helps visualize how different regions in the US have different maximum poverty counts and maximum birth counts.  It is also clear that the more Western a US state is, the more likely it is to have a higher poverty and birth count, especially in 2017.  While it is expected that as the birth counts increases, the poverty counts should also increase, US territories such as Puerto Rico are an exception to this rule.  
+
+```{r}
+ggplot(fullstats1, aes(x = Territory, y = PovertyCounts_2018, 
+  fill= Region))+
+  geom_bar(stat="summary") + 
+  theme(axis.text.x = element_text(angle=90, hjust=1)) + 
+  xlab("US States") + 
+  ylab("Poverty Counts in 2018") +
+  ggtitle("Poverty Counts in US States in 2018 Based on Region")  + 
+  scale_fill_manual(name = "Region", labels = c("Midwestern", 
+  "Northeastern", "Southern", "US Territory", "Western"), 
+  values = c("magenta", "pink", "purple", "light blue" ,"salmon"))
+```
+
+The above bar plot details the poverty counts in 2018 based on both state and region.  There are 5 different regions as shown in the legend, each containing a group of states or territories.  The goal of this plot is to see if there's a relationship between region and poverty counts in 2018.  Overall, California, Texas, Florida, and New York have the highest poverty counts in 2018.  This is to be expected since all four states have large populations.  While we can pinpoint which states have the highest poverty counts in which region, we cannot be certain of which entire region has the greatest poverty counts in 2018.  This is because, for example, in the Western region, California has the highest poverty count, but this does not mean that all of the states in this region have high poverty counts. This bar chart clearly indicates which states of different US regions have the highest poverty counts in 2018.   The Western state with the highest poverty count in 2018 is California.  Likewise,  the Northeastern state with the highest poverty count in 2018 is New Mexico.  The Southern state with the highest poverty count is Texas followed by Florida.  Overall, it seems as though the Midwestern states all have relatively lower poverty counts compared to other US regions.  In addition, the only US territory on this bar graph is Puerto Rico, which has a relatively lower poverty count compared to Texas, Florida, California, and other highly populous states.  
+
+```{r}
+ggplot(fullstats1, aes(Territory,Births))+
+  geom_point(size=2,aes(color= Deaths))+
+  scale_color_gradient(low="light pink", high="magenta") + 
+  theme(axis.text.x = element_text(angle=90, hjust=1)) + 
+  xlab("US States") + 
+  ylab("Births in 2017") + 
+  ggtitle("Birth Counts in 2017 Relationship with Death Counts in 2018 
+  Per US State")  
+```
+
+This scatterplot examines the relationship between birth counts in 2017 and death counts in 2018 for various states and Puerto Rico, a US territory.  In general, the main trend that is clear in this scatterplot is that the greater the birth counts in 2017, the greater the death counts in 2018.  The states with the highest birth counts also were the states that had the highest death counts the subsequent year.  This makes sense because larger, highly populous states are likely to have high birth counts as well as high death counts.  The states with very high birth and death counts were California, Texas, New York, and Florida; these are also the states that are highly populated.  
+
+# Dimensionality Reduction (20 points)
+```{r}
+library(cluster)
+library(GGally)
+
+#helps generate silhouette values for different k values from 2 to 10 for four numeric variables in select()
+silhouette<-vector()
+for(i in 2:10){
+pamdat <- fullstats1%>%select(PovertyPercent_2017, 
+  PovertyPercent_2018, Births,Deaths)%>%pam(i)
+silhouette[i] <- pamdat$silinfo$avg.width
+} 
+
+#plots silhouette for each k value to determine the cluster number to choose 
+ggplot()+geom_line(aes(x=1:10,y=silhouette))+
+  scale_x_continuous(name="k",breaks=1:10)
+
+#used the cluster number of k=2 to generate clusters for four variables and assigned to pam1
+pam1<-fullstats1%>%
+  select(PovertyPercent_2017, PovertyPercent_2018, Births, Deaths)%>% 
+  pam(k=2)
+
+#assigned data with only four numeric variables to pam3
+pam3<- fullstats1 %>% 
+  select(PovertyPercent_2017, PovertyPercent_2018, Births, Deaths)
+
+#gets visual of the pairwise combination of four numeric variables with 2 clusters 
+pam3 %>% 
+  mutate(cluster=as.factor(pam1$clustering)) %>% 
+  ggpairs(columns = 1:4, aes(color=cluster))
+
+#gets the average silhouette width, shows reasonable structure
+plot(pam1, which=2)
+
+#used to determine which state/territory belongs to which cluster (either 1 or 2)
+clust1and2<- fullstats1%>% 
+  mutate(cluster=as.factor(pam1$clustering))%>%
+  select(Territory,cluster,everything())
+head(clust1and2)
+```
+
+The major steps in cluster analysis includes processing data, choosing the number of clusters, running cluster analysis, interpreting clusters and overall fit, and finally visualizing clusters.  The four numeric variables that were analyzed through PAM are the poverty percent in 2017, the poverty percent in 2018, birth counts in 2017, and death counts in 2018.   A cluster value of 2 was chosen.  Cluster 1 includes small/and or less populous states, such as Alaska.  Cluster 2 includes large and/or more populous states, such as California, as compared to cluster 1.  Using ggpairs(), it was found that cluster 2 states are more likely to have higher birth and death counts in comparison to the states in cluster 1 and cluster 2 has greater variation/spread for birth and death counts.  Cluster 1 is more likely to have smaller birth and death counts and has less state by state variation/spread. The poverty percents in 2017 and 2018, however, show that cluster 2 has less variation for the percent of the state population in poverty.  On the other hand, cluster 1 has slightly more state by state variation for the percentage of state populations in poverty for 2017 and 2018.  Lastly, the average silhouette width was calculated and shows that there is a reasonable structure that has been found.  
+

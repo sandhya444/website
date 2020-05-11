@@ -1,0 +1,6 @@
+"0",""
+"0","#plot density of log-odds by binary outcome variable "
+"0","states1$y <- as.factor(states1$y)"
+"0","states1$logit<-predict(statesfit1,type=""link"")"
+"0","states1%>%ggplot()+geom_density(aes(logit,color=y,fill=y), alpha=.5)+ "
+"0","  xlab(""log-odds (logit)"")"

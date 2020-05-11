@@ -1,0 +1,112 @@
+"0","library(readxl)"
+"0","library(dplyr)"
+"0","earnings <- read_excel(""~/Desktop/Project2/earning.xlsx"") "
+"0","glimpse(earnings)"
+"1","Observations: 51
+"
+"1","Variables: 4
+"
+"1","$ state  [3m[38;5;246m<chr>[39m[23m ""Alabama"", ""Alaska"", ""Arizona"", ""Arkansas"", ""California"", ""Colorado"", ""Connecticut…
+"
+"1",""
+"1","$ women  [3m[38;5;246m<dbl>[39m[23m 688, 857, 762, 681, 876, 908, 923, 789, 1259, 716, 744, 797, 702, 831, 726, 753, 7…
+"
+"1",""
+"1","$ men    [3m[38;5;246m<dbl>[39m[23m 922, 1081, 910, 809, 992, 1069, 1140, 982, 1445, 867, 919, 965, 883, 1069, 910, 97…
+"
+"1",""
+"1","$ region [3m[38;5;246m<chr>[39m[23m ""S"", ""W."", ""W."", ""S"", ""W."", ""W."", ""NE"", ""S"", ""S"", ""S"", ""S"", ""W."", ""M_W"", ""M_W"", ""M…
+"
+"0","immigration <- read_excel(""~/Desktop/Project2/IMMIGRATION.xlsx"") %>% select(-...2)"
+"0","glimpse(immigration)"
+"1","Observations: 51
+"
+"1","Variables: 2
+"
+"1","$ state           [3m[38;5;246m<chr>[39m[23m ""Florida"", ""California"", ""Texas"", ""New York"", ""Massachusetts"", ""Washingto…
+"
+"1",""
+"1","$ net.immigration [3m[38;5;246m<dbl>[39m[23m 88678, 74028, 65044, 45753, 28426, 24103, 21284, 19532, 19209, 15053, 150…
+"
+"0","combined <- full_join(earnings, immigration, by = ""state"")"
+"0","glimpse(combined)"
+"1","Observations: 51
+"
+"1","Variables: 5
+"
+"1","$ state           [3m[38;5;246m<chr>[39m[23m ""Alabama"", ""Alaska"", ""Arizona"", ""Arkansas"", ""California"", ""Colorado"", ""Co…
+"
+"1",""
+"1","$ women           [3m[38;5;246m<dbl>[39m[23m 688, 857, 762, 681, 876, 908, 923, 789, 1259, 716, 744, 797, 702, 831, 72…
+"
+"1",""
+"1","$ men             [3m[38;5;246m<dbl>[39m[23m 922, 1081, 910, 809, 992, 1069, 1140, 982, 1445, 867, 919, 965, 883, 1069…
+"
+"1",""
+"1","$ region          [3m[38;5;246m<chr>[39m[23m ""S"", ""W."", ""W."", ""S"", ""W."", ""W."", ""NE"", ""S"", ""S"", ""S"", ""S"", ""W."", ""M_W"", …
+"
+"1",""
+"1","$ net.immigration [3m[38;5;246m<dbl>[39m[23m 2772, 659, 7782, 268, 74028, 10523, 12323, 73, 2604, 88678, 15053, 5014, …
+"
+"0","gdp <- read_excel(""~/Desktop/Project2/gdpstate.xlsx"") "
+"0","glimpse(gdp)"
+"1","Observations: 51
+"
+"1","Variables: 2
+"
+"1","$ state [3m[38;5;246m<chr>[39m[23m ""Alabama"", ""Alaska"", ""Arizona"", ""Arkansas"", ""California"", ""Colorado"", ""Connecticut""…
+"
+"1",""
+"1","$ gdp   [3m[38;5;246m<dbl>[39m[23m 221735.5, 54734.1, 348297.1, 128418.9, 2997732.8, 371749.6, 275726.9, 73481.3, 1406…
+"
+"0","governor<- read_excel(""~/Desktop/Project2/governor.xlsx"") "
+"0","glimpse(governor)"
+"1","Observations: 51
+"
+"1","Variables: 2
+"
+"1","$ state    [3m[38;5;246m<chr>[39m[23m ""Alabama"", ""Alaska"", ""Arizona"", ""Arkansas"", ""California"", ""Colorado"", ""Connectic…
+"
+"1",""
+"1","$ governor [3m[38;5;246m<chr>[39m[23m ""Republican"", ""Republican"", ""Republican"", ""Republican"", ""Democrat"", ""Democrat"", …
+"
+"0","combined1 <- full_join(gdp, governor, by = ""state"")"
+"0","glimpse(combined1)"
+"1","Observations: 51
+"
+"1","Variables: 3
+"
+"1","$ state    [3m[38;5;246m<chr>[39m[23m ""Alabama"", ""Alaska"", ""Arizona"", ""Arkansas"", ""California"", ""Colorado"", ""Connectic…
+"
+"1",""
+"1","$ gdp      [3m[38;5;246m<dbl>[39m[23m 221735.5, 54734.1, 348297.1, 128418.9, 2997732.8, 371749.6, 275726.9, 73481.3, 1…
+"
+"1",""
+"1","$ governor [3m[38;5;246m<chr>[39m[23m ""Republican"", ""Republican"", ""Republican"", ""Republican"", ""Democrat"", ""Democrat"", …
+"
+"0","states <- full_join(combined1, combined, by = ""state"")"
+"0","glimpse(states)"
+"1","Observations: 51
+"
+"1","Variables: 7
+"
+"1","$ state           [3m[38;5;246m<chr>[39m[23m ""Alabama"", ""Alaska"", ""Arizona"", ""Arkansas"", ""California"", ""Colorado"", ""Co…
+"
+"1",""
+"1","$ gdp             [3m[38;5;246m<dbl>[39m[23m 221735.5, 54734.1, 348297.1, 128418.9, 2997732.8, 371749.6, 275726.9, 734…
+"
+"1",""
+"1","$ governor        [3m[38;5;246m<chr>[39m[23m ""Republican"", ""Republican"", ""Republican"", ""Republican"", ""Democrat"", ""Demo…
+"
+"1",""
+"1","$ women           [3m[38;5;246m<dbl>[39m[23m 688, 857, 762, 681, 876, 908, 923, 789, 1259, 716, 744, 797, 702, 831, 72…
+"
+"1",""
+"1","$ men             [3m[38;5;246m<dbl>[39m[23m 922, 1081, 910, 809, 992, 1069, 1140, 982, 1445, 867, 919, 965, 883, 1069…
+"
+"1",""
+"1","$ region          [3m[38;5;246m<chr>[39m[23m ""S"", ""W."", ""W."", ""S"", ""W."", ""W."", ""NE"", ""S"", ""S"", ""S"", ""S"", ""W."", ""M_W"", …
+"
+"1",""
+"1","$ net.immigration [3m[38;5;246m<dbl>[39m[23m 2772, 659, 7782, 268, 74028, 10523, 12323, 73, 2604, 88678, 15053, 5014, …
+"
