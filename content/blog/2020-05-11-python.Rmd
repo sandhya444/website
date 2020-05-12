@@ -1,7 +1,7 @@
 ---
 title: "Python"
 author: "Sandhya Srinivasa"
-date: '2020-05-11'
+date: "YYYY-MM-DD"
 output:
   html_document:
     df_print: paged
