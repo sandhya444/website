@@ -8,6 +8,11 @@ tags: []
 description: ''
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE)
+```
+
+
 ```{r}
 library(reticulate)
 
