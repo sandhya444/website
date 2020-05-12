@@ -1,3 +1,0 @@
-"0","#library(glmnet)"
-"0","newstates <- states %>% select(-state, -net.immigration_c)"
-"0","head(newstates)"
