@@ -61,7 +61,7 @@
         </div>
         <div class="blog-title">
           <h4>
-          January 1, 0001
+          May 1, 2020
             &nbsp;&nbsp;
             
           </h4>
@@ -72,17 +72,26 @@
               
 
 
-<p>##Sandhya Srinivasa, ss64834</p>
-<p>##Question 0: Introduction
-0. (5 pts) Introduce your dataset and each of your variables (or just your main variables if you have lots) in a paragraph. What are they measuring? How many observations?</p>
+<div id="sandhya-srinivasa-ss64834" class="section level2">
+<h2>Sandhya Srinivasa, ss64834</h2>
+</div>
+<div id="question-0-introduction" class="section level2">
+<h2>Question 0: Introduction</h2>
+<ol start="0" style="list-style-type: decimal">
+<li>(5 pts) Introduce your dataset and each of your variables (or just your main variables if you have lots) in a paragraph. What are they measuring? How many observations?</li>
+</ol>
 <p>My dataset includes GDP, the governor, women’s weekly median earnings, men’s weekly median earnings, the region, and net immigration for each of the states in the US in 2018. The GDP variable (in millions of dollars) is a measure of economy for each of the states in 2018 and is essentially the gross domestic product. The dataset also includes the “governor” variable, which determines whether the governor was a Republican or a Democrat for each of the states in 2018. This variable will be used to create a new binary variable. The women’s weekly median earnings in 2018 is a measure of women’s income for each of the states, and the men’s weekly median earnings in 2018 is a measure of men’s income for each of the states. The region is a categorical variable that splits the states into four separate groups based on region (Northeastern, Midwestern, Western, and Southern). Lastly, the net immigration is the total amount of immigration that the states each received in 2018. Some of the net immigration values are negative because more people left the state then entered it. There are a total of 51 observations, and each of the individual variables also has 51 observations. I created this dataset by merging several different tables together becuase I wanted to examine the relationship between the variables. I have been learning in my class how women’s income influences the GDP, which can influence the ecoonomy of the entire country. I have also been interested in how immigration affects GDP, and have always wanted to observe how GDP differs in different states and regions. I also wanted to see if men and women’s income are different based on the region.</p>
-<p>##Sources:</p>
+</div>
+<div id="sources" class="section level2">
+<h2>Sources:</h2>
 <p><a href="https://www.bls.gov/regions/southwest/news-release/womensearnings_texas.htm" class="uri">https://www.bls.gov/regions/southwest/news-release/womensearnings_texas.htm</a>
 <a href="http://www.statsamerica.org/sip/rank_list.aspx?rank_label=pop21&amp;ct=S09" class="uri">http://www.statsamerica.org/sip/rank_list.aspx?rank_label=pop21&amp;ct=S09</a>
 <a href="https://apps.bea.gov/iTable/iTable.cfm?0=1200&amp;1=1&amp;2=200&amp;3=sic&amp;4=1&amp;5=xx&amp;6=-1&amp;7=-1&amp;8=-1&amp;9=70&amp;10=levels&amp;isuri=1&amp;reqid=70&amp;step=10#reqid=70&amp;step=10&amp;isuri=1&amp;7003=200&amp;7035=-1&amp;7004=naics&amp;7005=1&amp;7006=xx&amp;7036=-1&amp;7001=1200&amp;7002=1&amp;7090=70&amp;7007=-1&amp;7093=levels" class="uri">https://apps.bea.gov/iTable/iTable.cfm?0=1200&amp;1=1&amp;2=200&amp;3=sic&amp;4=1&amp;5=xx&amp;6=-1&amp;7=-1&amp;8=-1&amp;9=70&amp;10=levels&amp;isuri=1&amp;reqid=70&amp;step=10#reqid=70&amp;step=10&amp;isuri=1&amp;7003=200&amp;7035=-1&amp;7004=naics&amp;7005=1&amp;7006=xx&amp;7036=-1&amp;7001=1200&amp;7002=1&amp;7090=70&amp;7007=-1&amp;7093=levels</a> (I used this website to generate a table for GDP)
 <a href="https://en.wikipedia.org/wiki/List_of_regions_of_the_United_States" class="uri">https://en.wikipedia.org/wiki/List_of_regions_of_the_United_States</a><br />
 <a href="https://en.wikipedia.org/wiki/List_of_United_States_governors" class="uri">https://en.wikipedia.org/wiki/List_of_United_States_governors</a> (For states whose governors joined office after 2018, I manually searched for who the governor was in 2018 for those states on Wikipedia)</p>
-<p>##Creating Dataset</p>
+</div>
+<div id="creating-dataset" class="section level2">
+<h2>Creating Dataset</h2>
 <pre class="r"><code>library(readxl)
 library(dplyr)
 earnings &lt;- read_excel(&quot;~/Desktop/Project2/earning.xlsx&quot;) 
@@ -163,8 +172,10 @@ glimpse(states)</code></pre>
 &quot;S&quot;, &quot;S&quot;, &quot;S&quot;, &quot;S&quot;, &quot;W.&quot;, &quot;M_W&quot;, …
 ## $ net.immigration &lt;dbl&gt; 2772, 659, 7782, 268, 74028,
 10523, 12323, 73, 2604, 88678, 15053, 5014, …</code></pre>
-<p>##Question 1
-<strong>1. (15 pts)</strong> Perform a MANOVA testing whether any of your numeric variables (or a subset of them, if including them all doesn’t make sense) show a mean difference across levels of one of your categorical variables (3). If they do, perform univariate ANOVAs to find response(s) showing a mean difference across groups (3), and perform post-hoc t tests to find which groups differ (3). Discuss the number of tests you have performed, calculate the probability of at least one type I error (if unadjusted), and adjust the significance level accordingly (bonferroni correction) before discussing significant differences (3). Briefly discuss assumptions and whether or not they are likely to have been met (2).</p>
+</div>
+<div id="question-1" class="section level2">
+<h2>Question 1</h2>
+<p><strong>1. (15 pts)</strong> Perform a MANOVA testing whether any of your numeric variables (or a subset of them, if including them all doesn’t make sense) show a mean difference across levels of one of your categorical variables (3). If they do, perform univariate ANOVAs to find response(s) showing a mean difference across groups (3), and perform post-hoc t tests to find which groups differ (3). Discuss the number of tests you have performed, calculate the probability of at least one type I error (if unadjusted), and adjust the significance level accordingly (bonferroni correction) before discussing significant differences (3). Briefly discuss assumptions and whether or not they are likely to have been met (2).</p>
 <pre class="r"><code>#MANOVA on only subset of numeric variables 
 states.manova&lt;- manova(cbind(men, women) ~ region, data = states)
 summary(states.manova)</code></pre>
@@ -206,8 +217,10 @@ for(i in 1:4){print(as.character(homo$region[i]));print(homo$s[i])}</code></pre>
 <p>The MANOVA test was performed only on a subset of numeric variables instead of all of them. I chose to see if women’s weekly median earnings and men’s weekly median earnings showed a mean difference across the categorical variable, the different regions in the US (Midwestern, Northeastern, Southern, and Western). Because both of these variables are based on income, I thought it would definitely make sense to only examine these two in this MANOVA test. This way, for example, if the men’s weekly median income had a greater difference based on region and the women’s weekly median income didn’t, then it suggests possibly that men’s income can vary based on region, whereas women’s income is more likely to be stagnant.</p>
 <p>The MANOVA p-value(0.3733)&gt;0.05, thus we fail to reject the null hypothesis. Because the MANOVA is not significant, it is not necessary to perform univariate ANOVAs and post-hoc tests. The total number of tests performed was 1 (1 MANOVA), however, if my MANOVA and ANOVAs had been significant, I would’ve performed a total of 11 tests (1 MANOVA, 2ANOVAs, and 8 t-tests). Because I performed only one test, the probability of at least one type I error would be 0.05 (1-0.95). If the MANOVA and univariate ANOVAs were significant, the probability of at least one type I error would have been 0.4312 (1-(0.95)^11). If the MANOVA and univariate ANOVAs had been significant, the significance level according to Bonferroni correction would have been 0.0045 (0.05/11). Overall, for both women’s weekly median income and men’s weekly median income, means for each US region is equal (no significant differences).</p>
 <p>The assumptions for MANOVA are random sampling, multivariate normality of the dependent variables, homogeneity of covariance matrices within groups for each dependent variable and between dependent variables, no multicollinearity, no univariate or multivariate outliers, and the dependent variables are linearly related. The main assumptions that are tested for this MANOVA test are multivariate normality and homogeneity of covariances. Creating the density plot for multivariate normality suggests that multivariate normality is likely to have been met. It is also possible that homogeneity of covariances may not have been met.</p>
-<p>##Question 2
-<strong>2. (10 pts)</strong> Perform some kind of randomization test on your data (that makes sense). This can be anything you want! State null and alternative hypotheses, perform the test, and interpret the results (7). Create a plot visualizing the null distribution and the test statistic (3).</p>
+</div>
+<div id="question-2" class="section level2">
+<h2>Question 2</h2>
+<p><strong>2. (10 pts)</strong> Perform some kind of randomization test on your data (that makes sense). This can be anything you want! State null and alternative hypotheses, perform the test, and interpret the results (7). Create a plot visualizing the null distribution and the test statistic (3).</p>
 <pre class="r"><code>randdf &lt;- states%&gt;% group_by(region) %&gt;% filter(grepl(&quot;W.&quot;, region))
 randdf1 &lt;- states %&gt;% group_by(region) %&gt;% filter(grepl(&quot;NE&quot;, region))
 
@@ -253,8 +266,10 @@ value</code></pre>
 Alternate hypothesis: mean GDP in millions of dollars is different for Northeastern vs Western US states.</p>
 <p>Interpretation: The two tailed p-value&gt;0.05, thus we fail to reject the null hypothesis. This means that the mean GDP in millions of dollars is the same for Northeastern vs Western US states.</p>
 <p>Out of the four regions of the US, I chose the Northeastern and Western regions for this randomization test because I felt that they were the most geographically distant regions. I was curious to see whether the GDP would be different for the two most geographically distant regions. However, after performing this randomization test, it is clear that the mean GDP in millions of dollars is the same for Northeastern and Western regions in the US.</p>
-<p>##Question 3
-<strong>3. (35 pts)</strong> Build a linear regression model predicting one of your response variables from at least 2 other variables, including their interaction. Mean-center any numeric variables involved in the interaction.</p>
+</div>
+<div id="question-3" class="section level2">
+<h2>Question 3</h2>
+<p><strong>3. (35 pts)</strong> Build a linear regression model predicting one of your response variables from at least 2 other variables, including their interaction. Mean-center any numeric variables involved in the interaction.</p>
 <pre><code>- Interpret the coefficient estimates (do not discuss significance) (10)
 - Plot the regression using `ggplot()`. If your interaction is numeric by numeric, refer to code near the end of WS15 to make the plot. If you have 3 or more predictors, just chose two to plot for convenience. (8)
 - Check assumptions of linearity, normality, and homoskedasticity either graphically or using a hypothesis test (4)
@@ -372,8 +387,10 @@ net.immigration_c:regionS: The slope for net immigration on GDP in millions of d
 <p>We must also remember to check the assumptions. With respect to the assumptions of linearity, it is likely to have been met. With respect to the assumption of normality, normality may or may not have been met (different conclusions were reached based on the shapiro test and the ks.test). The qplot also suggests that normality may or may not have been met (difficult to tell for sure if it is met or not). With respect to homoskedasticity, the p-value&lt;0.05, we reject the null hypothesis, suggesting that homoskedasticity is not met.</p>
 <p>Robust standard errors can be used when the assumption of homoskedasticity is not met. After calculating the robust standard errors, it was found that the centered net immigration’s p-value&lt;0.05, thus we reject the null hypothesis, suggesting that there is a significant effect of centered net immigration on GDP. This was also found to be true before calculating the robust standard errors. However, before calculating the robust standard errors, the interaction between centered net immigration and the Southern region’s p-value&lt;0.05, suggesting that there is a significant effect of this interaction on GDP. On the other hand, after calculating the robust standard errors, this p-value&gt;0.05, suggesting that there is no significant effect.<br />
 The proportion of variation in the outcome that my model explains is 0.9011602.</p>
-<p>##Question 4
-<strong>4. (5 pts)</strong> Rerun same regression model (with interaction), but this time compute bootstrapped standard errors. Discuss any changes you observe in SEs and p-values using these SEs compared to the original SEs and the robust SEs)</p>
+</div>
+<div id="question-4" class="section level2">
+<h2>Question 4</h2>
+<p><strong>4. (5 pts)</strong> Rerun same regression model (with interaction), but this time compute bootstrapped standard errors. Discuss any changes you observe in SEs and p-values using these SEs compared to the original SEs and the robust SEs)</p>
 <pre class="r"><code>statesresidual &lt;- statesfit$residuals
 statesfitvalues &lt;- statesfit$fitted.values
 statesresresamp &lt;-replicate(5000, {
@@ -393,8 +410,10 @@ net.immigration_c:regionNE
 <p>Bootstrapped standard errors can be computed when the assumptions of normality and homoskedasticity are not met.</p>
 <p>The robust standard errors for the intercept, Northeastern region, Southern region, Western region, centered net immigration and Northeastern region interaction, centered net immigration and Southern region interaction, and the centered net immigration and Western region interaction are greater than the computed bootstrapped standard errors for these same variables. Thus, the p-values for these variables after getting the robust standard error are greater than p-values for these same variables after computing the bootstrapped standard errors. On the other hand, the robust standard error for centered net immigration is less than the computed boostrapped standard error for centered net immigration. Thus, the p-value for this variable after getting the robust standard error would be smaller than the p-value for this same variable after computing the boostrapped standard error.</p>
 <p>The original standard errors for the intercept, centered net immigration, Northeastern region, Southern region, Western region, centered net immigration and Northeastern region interaction, centered net immigration and Southern region interaction, and the centered net immigration and Western region interaction are larger than the computed boostrapped standard errors for these variables/interactions. Thus, the p-values for these variables after getting the original standard errors are larger than the p-values after computing bootstrapped standard errors for these variables. This is because as the standard error value increases, the p-value also increases.</p>
-<p>##Question 5
-<strong>5. (40 pts)</strong> Perform a logistic regression predicting a binary categorical variable (if you don’t have one, make/get one) from at least two explanatory variables (interaction not necessary).</p>
+</div>
+<div id="question-5" class="section level2">
+<h2>Question 5</h2>
+<p><strong>5. (40 pts)</strong> Perform a logistic regression predicting a binary categorical variable (if you don’t have one, make/get one) from at least two explanatory variables (interaction not necessary).</p>
 <pre><code>- Interpret coefficient estimates in context (10)
 - Report a confusion matrix for your logistic regression (2)
 - Compute and discuss the Accuracy, Sensitivity (TPR), Specificity (TNR), and Recall (PPV) of your model (5)
@@ -521,8 +540,10 @@ summarize_all(diags,mean) </code></pre>
 <p>A confusion matrix is a table that displays the truth (what actually happened) and the prediction (what we think might happen). Based on this confusion matrix, it is possible to calculate the accuracy, sensitivity, specificity, and PPV. The accuracy was 0.7647059, the sensitivity was 0.9117647, the specificity was 0.4705882, and the PPV was 0.775. The accuracy is okay, but definitely could be higher. While the sensitivity is good, the specificity is very low. Likewise, the PPV is also not that great either and is okay.</p>
 <p>After computing these values, I plotted the ROC plot which has the FPR on the x-axis and the TPR on the y-axis. The calculated AUC value from the ROC plot was 0.7698962, which can be classified as fair since it is between 0.7 and 0.8.</p>
 <p>After this, I performed the 10-fold CV to get the average out-of-sample accuracy, sensitivity, and recall. The average out-of-sample accuracy was 0.7066667, average out-of-sample sensitivity was 0.8766667, and the average out-of-sample recall was 0.7416667.</p>
-<p>##Question 6
-<strong>6. (10 pts)</strong> Choose one variable you want to predict (can be one you used from before; either binary or continuous) and run a LASSO regression inputting all the rest of your variables as predictors. Choose lambda to give the simplest model whose accuracy is near that of the best (i.e., <code>lambda.1se</code>). Discuss which variables are retained. Perform 10-fold CV using this model: if response in binary, compare model’s out-of-sample accuracy to that of your logistic regression in part 5; if response is numeric, compare the residual standard error (at the bottom of the summary output, aka RMSE): lower is better fit!</p>
+</div>
+<div id="question-6" class="section level2">
+<h2>Question 6</h2>
+<p><strong>6. (10 pts)</strong> Choose one variable you want to predict (can be one you used from before; either binary or continuous) and run a LASSO regression inputting all the rest of your variables as predictors. Choose lambda to give the simplest model whose accuracy is near that of the best (i.e., <code>lambda.1se</code>). Discuss which variables are retained. Perform 10-fold CV using this model: if response in binary, compare model’s out-of-sample accuracy to that of your logistic regression in part 5; if response is numeric, compare the residual standard error (at the bottom of the summary output, aka RMSE): lower is better fit!</p>
 <pre class="r"><code>library(glmnet)
 newstates &lt;- states %&gt;% select(-state, -net.immigration_c)
 head(newstates)</code></pre>
@@ -597,6 +618,7 @@ mean(diags3)</code></pre>
 <p>The Lasso regression helps determine what variables to retain. This is important because it gives us insight into which explanatory variables are very good predictors of GDP, in this case. From the Lasso regression, it is clear that the only retained variable is net immigration.</p>
 <p>The 10-fold CV was performed using net immigration as the only predictor for GDP. Because we have chosen the only variable that best predicts GDP, it makes sense that this 10-fold CV should provide better predictions. Overall, the MSE from the prediction using this 10-fold CV was smaller than the MSE from the full model. Becuase the 10-fold CV produced a smaller MSE, it is a much better fit. It makes sense that this 10-fold CV with only one important predictor would provide a better fit than a model that uses all predictors.</p>
 <p>Note that the <code>echo = FALSE</code> parameter was added to the code chunk to prevent printing of the R code that generated the plot.</p>
+</div>
 
               <hr>
               <div class="related-posts">

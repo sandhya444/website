@@ -6,10 +6,29 @@
     <description>Recent content on Portfolio</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
-    <lastBuildDate>Sun, 02 Oct 2016 22:55:05 -0400</lastBuildDate>
+    <lastBuildDate>Fri, 01 May 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Project 2 (Modeling)</title>
+      <link>/project2/</link>
+      <pubDate>Fri, 01 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/project2/</guid>
+      <description>Sandhya Srinivasa, ss64834  Question 0: Introduction (5 pts) Introduce your dataset and each of your variables (or just your main variables if you have lots) in a paragraph. What are they measuring? How many observations?  My dataset includes GDP, the governor, women’s weekly median earnings, men’s weekly median earnings, the region, and net immigration for each of the states in the US in 2018. The GDP variable (in millions of dollars) is a measure of economy for each of the states in 2018 and is essentially the gross domestic product.</description>
+    </item>
+    
+    <item>
+      <title>Project 1: Exploratory Analysis</title>
+      <link>/project1/</link>
+      <pubDate>Mon, 16 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/project1/</guid>
+      <description>Sandhya Srinivasa, ss64834
+Introduction (4 points) My two datasets include a poverty dataset and a birth and death dataset. The variables in the poverty dataset are poverty counts and percents in 2017 and 2018 by US state or territory (includes Puerto Rico, etc). The variables in the birth and death dataset are fertility rates, birth counts in 2017, death rate, and death counts in 2018 by US state or territory.</description>
+    </item>
     
     <item>
       <title>Projects</title>
@@ -18,30 +37,9 @@
       
       <guid>/projects/</guid>
       <description>Projects Here are some projects I have recently completed:
-  Exploratory Data Analysis with Tidyverse Tools
-  Modeling, Testing, and Classification
+  Project 1: Exploratory Data Analysis with Tidyverse Tools
+  Project 2: Modeling, Testing, and Classification
   </description>
-    </item>
-    
-    <item>
-      <title>Project 1: Exploratory Analysis</title>
-      <link>/project1/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/project1/</guid>
-      <description>Sandhya Srinivasa, ss64834
-Introduction (4 points) My two datasets include a poverty dataset and a birth and death dataset. The variables in the poverty dataset are poverty counts and percents in 2017 and 2018 by US state or territory (includes Puerto Rico, etc). The variables in the birth and death dataset are fertility rates, birth counts in 2017, death rate, and death counts in 2018 by US state or territory.</description>
-    </item>
-    
-    <item>
-      <title>Project 2 (Modeling)</title>
-      <link>/project2/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/project2/</guid>
-      <description>##Sandhya Srinivasa, ss64834
-##Question 0: Introduction 0. (5 pts) Introduce your dataset and each of your variables (or just your main variables if you have lots) in a paragraph. What are they measuring? How many observations?
-My dataset includes GDP, the governor, women’s weekly median earnings, men’s weekly median earnings, the region, and net immigration for each of the states in the US in 2018. The GDP variable (in millions of dollars) is a measure of economy for each of the states in 2018 and is essentially the gross domestic product.</description>
     </item>
     
     <item>

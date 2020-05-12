@@ -1,5 +1,6 @@
 ---
 title: 'Project 1: Exploratory Analysis'
+date: "2020-03-16"
 output:
   pdf_document: default
   html_document: default

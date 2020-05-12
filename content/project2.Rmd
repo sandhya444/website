@@ -1,5 +1,6 @@
 ---
 title: "Project 2 (Modeling)"
+date: "2020-05-01"
 output:
   pdf_document: default
   html_document: default
@@ -24,15 +25,15 @@ options(tibble.width = 100,width = 100)
 library(tidyverse)
 ```
 
-##Sandhya Srinivasa, ss64834
+## Sandhya Srinivasa, ss64834
 
-##Question 0: Introduction
+## Question 0: Introduction
 0. (5 pts) Introduce your dataset and each of your variables (or just your main variables if you have lots) in a paragraph. What are they measuring? How many observations?  
 
 My dataset includes GDP, the governor, women's weekly median earnings, men's weekly median earnings, the region, and net immigration for each of the states in the US in 2018. The GDP variable (in millions of dollars) is a measure of economy for each of the states in 2018 and is essentially the gross domestic product.  The dataset also includes the "governor" variable, which determines whether the governor was a Republican or a Democrat for each of the states in 2018.  This variable will be used to create a new binary variable.  The women's weekly median earnings in 2018 is a measure of women's income for each of the states, and the men's weekly median earnings in 2018 is a measure of men's income for each of the states.  The region is a categorical variable that splits the states into four separate groups based on region (Northeastern, Midwestern, Western, and Southern).  Lastly, the net immigration is the total amount of immigration that the states each received in 2018.  Some of the net immigration values are negative because more people left the state then entered it.  There are a total of 51 observations, and each of the individual variables also has 51 observations.  I created this dataset by merging several different tables together becuase I wanted to examine the relationship between the variables.  I have been learning in my class how women's income influences the GDP, which can influence the ecoonomy of the entire country.  I have also been interested in how immigration affects GDP, and have always wanted to observe how GDP differs in different states and regions.  I also wanted to see if men and women's income are different based on the region.  
 
 
-##Sources:
+## Sources:
 
 https://www.bls.gov/regions/southwest/news-release/womensearnings_texas.htm
 http://www.statsamerica.org/sip/rank_list.aspx?rank_label=pop21&ct=S09
@@ -40,7 +41,7 @@ https://apps.bea.gov/iTable/iTable.cfm?0=1200&1=1&2=200&3=sic&4=1&5=xx&6=-1&7=-1
 https://en.wikipedia.org/wiki/List_of_regions_of_the_United_States  
 https://en.wikipedia.org/wiki/List_of_United_States_governors (For states whose governors joined office after 2018, I manually searched for who the governor was in 2018 for those states on Wikipedia)
 
-##Creating Dataset
+## Creating Dataset
 ```{r}
 library(readxl)
 library(dplyr)
@@ -65,7 +66,7 @@ glimpse(states)
 
 
 
-##Question 1
+## Question 1
 **1. (15 pts)** Perform a MANOVA testing whether any of your numeric variables (or a subset of them, if including them all doesn't make sense) show a mean difference across levels of one of your categorical variables (3). If they do, perform univariate ANOVAs to find response(s) showing a mean difference across groups (3), and perform post-hoc t tests to find which groups differ (3). Discuss the number of tests you have performed, calculate the probability of at least one type I error (if unadjusted), and adjust the significance level accordingly (bonferroni correction) before discussing significant differences (3). Briefly discuss assumptions and whether or not they are likely to have been met (2).
 
 ```{r}
@@ -93,7 +94,7 @@ The assumptions for MANOVA are random sampling, multivariate normality of the de
 
 
 
-##Question 2
+## Question 2
 **2. (10 pts)** Perform some kind of randomization test on your data (that makes sense). This can be anything you want! State null and alternative hypotheses, perform the test, and interpret the results (7). Create a plot visualizing the null distribution and the test statistic (3).
 
 ```{r}
@@ -139,7 +140,7 @@ Out of the four regions of the US, I chose the Northeastern and Western regions 
 
 
 
-##Question 3 
+## Question 3 
 **3. (35 pts)** Build a linear regression model predicting one of your response variables from at least 2 other variables, including their interaction. Mean-center any numeric variables involved in the interaction.
 
     - Interpret the coefficient estimates (do not discuss significance) (10)
@@ -215,7 +216,7 @@ The proportion of variation in the outcome that my model explains is 0.9011602.
 
 
 
-##Question 4
+## Question 4
 **4. (5 pts)** Rerun same regression model (with interaction), but this time compute bootstrapped standard errors. Discuss any changes you observe in SEs and p-values using these SEs compared to the original SEs and the robust SEs)
 
 
@@ -240,7 +241,7 @@ The robust standard errors for the intercept, Northeastern region, Southern regi
 The original standard errors for the intercept, centered net immigration, Northeastern region, Southern region, Western region, centered net immigration and Northeastern region interaction, centered net immigration and Southern region interaction, and the centered net immigration and Western region interaction are larger than the computed boostrapped standard errors for these variables/interactions.  Thus, the p-values for these variables after getting the original standard errors are larger than the p-values after computing bootstrapped standard errors for these variables.  This is because as the standard error value increases, the p-value also increases.  
 
 
-##Question 5
+## Question 5
 **5. (40 pts)** Perform a logistic regression predicting a binary categorical variable (if you don't have one, make/get one) from at least two explanatory variables (interaction not necessary). 
 
     - Interpret coefficient estimates in context (10)
@@ -354,7 +355,7 @@ After computing these values, I plotted the ROC plot which has the FPR on the x-
 After this, I performed the 10-fold CV to get the average out-of-sample accuracy, sensitivity, and recall. The average out-of-sample accuracy was 0.7066667, average out-of-sample sensitivity was 0.8766667, and the average out-of-sample recall was 0.7416667.  
 
 
-##Question 6
+## Question 6
 **6. (10 pts)** Choose one variable you want to predict (can be one you used from before; either binary or continuous) and run a LASSO regression inputting all the rest of your variables as predictors. Choose lambda to give the simplest model whose accuracy is near that of the best (i.e., `lambda.1se`). Discuss which variables are retained. Perform 10-fold CV using this model: if response in binary, compare model's out-of-sample accuracy to that of your logistic regression in part 5; if response is numeric, compare the residual standard error (at the bottom of the summary output, aka RMSE): lower is better fit!
 
 

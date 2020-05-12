@@ -61,7 +61,7 @@
         </div>
         <div class="blog-title">
           <h4>
-          January 1, 0001
+          March 16, 2020
             &nbsp;&nbsp;
             
           </h4>
@@ -92,8 +92,8 @@ library(readxl)
 
 birthdeath &lt;- read_excel(&quot;~/Desktop/Project1/birthdeath.xlsx&quot;)
 glimpse(birthdeath)</code></pre>
-<pre><code>## Observations: 56
-## Variables: 6
+<pre><code>## Rows: 56
+## Columns: 6
 ## $ Territory      &lt;chr&gt; &quot;Alabama_S&quot;, &quot;Alaska_W&quot;, &quot;Arizona_W&quot;, &quot;Arkansas_S&quot;, &quot;C…
 ## $ Births         &lt;dbl&gt; 57761, 10086, 80723, 37018, 454920, 62885, 34725, 1062…
 ## $ Fertility_Rate &lt;dbl&gt; 60.9, 69.3, 58.6, 64.0, 56.2, 54.1, 51.8, 59.1, 48.8, …
@@ -102,36 +102,36 @@ glimpse(birthdeath)</code></pre>
 ## $ ...6           &lt;lgl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA…</code></pre>
 <pre class="r"><code>finalbirthdeath &lt;- birthdeath %&gt;% select(-...6)
 glimpse(finalbirthdeath)</code></pre>
-<pre><code>## Observations: 56
-## Variables: 5
+<pre><code>## Rows: 56
+## Columns: 5
 ## $ Territory      &lt;chr&gt; &quot;Alabama_S&quot;, &quot;Alaska_W&quot;, &quot;Arizona_W&quot;, &quot;Arkansas_S&quot;, &quot;C…
 ## $ Births         &lt;dbl&gt; 57761, 10086, 80723, 37018, 454920, 62885, 34725, 1062…
 ## $ Fertility_Rate &lt;dbl&gt; 60.9, 69.3, 58.6, 64.0, 56.2, 54.1, 51.8, 59.1, 48.8, …
 ## $ Deaths         &lt;dbl&gt; 53238, 4411, 57758, 32588, 268189, 38063, 31312, 9178,…
 ## $ Death_Rate     &lt;dbl&gt; 1092.1, 596.2, 823.2, 1084.7, 678.3, 678.8, 872.6, 954…</code></pre>
 <pre class="r"><code>longerbirthdeath &lt;- finalbirthdeath %&gt;% pivot_longer(cols = c(&quot;Births&quot;, 
-    &quot;Fertility_Rate&quot;, &quot;Deaths&quot;, &quot;Death_Rate&quot;), names_to = &quot;Population Stats&quot;, 
-    values_to = &quot;Value&quot;)
+  &quot;Fertility_Rate&quot;, &quot;Deaths&quot;, &quot;Death_Rate&quot;), names_to = &quot;Population Stats&quot;, 
+  values_to = &quot;Value&quot;) 
 glimpse(longerbirthdeath)</code></pre>
-<pre><code>## Observations: 224
-## Variables: 3
+<pre><code>## Rows: 224
+## Columns: 3
 ## $ Territory          &lt;chr&gt; &quot;Alabama_S&quot;, &quot;Alabama_S&quot;, &quot;Alabama_S&quot;, &quot;Alabama_S&quot;…
 ## $ `Population Stats` &lt;chr&gt; &quot;Births&quot;, &quot;Fertility_Rate&quot;, &quot;Deaths&quot;, &quot;Death_Rate&quot;…
 ## $ Value              &lt;dbl&gt; 57761.0, 60.9, 53238.0, 1092.1, 10086.0, 69.3, 441…</code></pre>
-<pre class="r"><code>widerbirthdeath &lt;- longerbirthdeath %&gt;% pivot_wider(names_from = &quot;Population Stats&quot;, 
-    values_from = &quot;Value&quot;)
+<pre class="r"><code>widerbirthdeath &lt;- longerbirthdeath %&gt;% pivot_wider(names_from = 
+  &quot;Population Stats&quot;, values_from = &quot;Value&quot;)
 glimpse(widerbirthdeath)</code></pre>
-<pre><code>## Observations: 56
-## Variables: 5
+<pre><code>## Rows: 56
+## Columns: 5
 ## $ Territory      &lt;chr&gt; &quot;Alabama_S&quot;, &quot;Alaska_W&quot;, &quot;Arizona_W&quot;, &quot;Arkansas_S&quot;, &quot;C…
 ## $ Births         &lt;dbl&gt; 57761, 10086, 80723, 37018, 454920, 62885, 34725, 1062…
 ## $ Fertility_Rate &lt;dbl&gt; 60.9, 69.3, 58.6, 64.0, 56.2, 54.1, 51.8, 59.1, 48.8, …
 ## $ Deaths         &lt;dbl&gt; 53238, 4411, 57758, 32588, 268189, 38063, 31312, 9178,…
 ## $ Death_Rate     &lt;dbl&gt; 1092.1, 596.2, 823.2, 1084.7, 678.3, 678.8, 872.6, 954…</code></pre>
-<pre class="r"><code>finalpoverty &lt;- read_excel(&quot;~/Desktop/Project1/poverty.xlsx&quot;)
+<pre class="r"><code>finalpoverty &lt;- read_excel(&quot;~/Desktop/Project1/poverty.xlsx&quot;) 
 glimpse(finalpoverty)</code></pre>
-<pre><code>## Observations: 53
-## Variables: 7
+<pre><code>## Rows: 53
+## Columns: 7
 ## $ Territory              &lt;chr&gt; &quot;United States&quot;, &quot;Alabama_S&quot;, &quot;Alaska_W&quot;, &quot;Ari…
 ## $ PovertyCounts_2017     &lt;dbl&gt; 42583651, 802656, 80012, 1018935, 478365, 5160…
 ## $ PovertyPercent_2017    &lt;dbl&gt; 13.4, 16.9, 11.1, 14.9, 16.4, 13.3, 10.3, 9.6,…
@@ -139,21 +139,21 @@ glimpse(finalpoverty)</code></pre>
 ## $ PovertyPercent_2018    &lt;dbl&gt; 13.1, 16.8, 10.9, 14.0, 17.2, 12.8, 9.6, 10.4,…
 ## $ CountChangeinPoverty   &lt;dbl&gt; -731336, -2234, -1392, -35436, 26139, -190882,…
 ## $ PercentChangeinPoverty &lt;dbl&gt; -0.3, -0.1, -0.2, -0.9, 0.8, -0.5, -0.7, 0.8, …</code></pre>
-<pre class="r"><code>longerpoverty &lt;- finalpoverty %&gt;% pivot_longer(cols = c(&quot;PovertyCounts_2017&quot;, 
-    &quot;PovertyPercent_2017&quot;, &quot;PovertyCounts_2018&quot;, &quot;PovertyPercent_2018&quot;, 
-    &quot;CountChangeinPoverty&quot;, &quot;PercentChangeinPoverty&quot;), names_to = &quot;Population Poverty Stats&quot;, 
-    values_to = &quot;Values&quot;)
+<pre class="r"><code>longerpoverty &lt;- finalpoverty %&gt;% pivot_longer(cols = c(&quot;PovertyCounts_2017&quot;,
+  &quot;PovertyPercent_2017&quot;, &quot;PovertyCounts_2018&quot;, 
+  &quot;PovertyPercent_2018&quot;,&quot;CountChangeinPoverty&quot;, &quot;PercentChangeinPoverty&quot;),
+  names_to = &quot;Population Poverty Stats&quot;,values_to = &quot;Values&quot;)
 glimpse(longerpoverty)</code></pre>
-<pre><code>## Observations: 318
-## Variables: 3
+<pre><code>## Rows: 318
+## Columns: 3
 ## $ Territory                  &lt;chr&gt; &quot;United States&quot;, &quot;United States&quot;, &quot;United …
 ## $ `Population Poverty Stats` &lt;chr&gt; &quot;PovertyCounts_2017&quot;, &quot;PovertyPercent_2017…
 ## $ Values                     &lt;dbl&gt; 42583651.0, 13.4, 41852315.0, 13.1, -73133…</code></pre>
-<pre class="r"><code>widerpoverty &lt;- longerpoverty %&gt;% pivot_wider(names_from = `Population Poverty Stats`, 
-    values_from = &quot;Values&quot;)
+<pre class="r"><code>widerpoverty &lt;- longerpoverty %&gt;% pivot_wider(names_from = 
+  `Population Poverty Stats`, values_from = &quot;Values&quot;)
 glimpse(widerpoverty)</code></pre>
-<pre><code>## Observations: 53
-## Variables: 7
+<pre><code>## Rows: 53
+## Columns: 7
 ## $ Territory              &lt;chr&gt; &quot;United States&quot;, &quot;Alabama_S&quot;, &quot;Alaska_W&quot;, &quot;Ari…
 ## $ PovertyCounts_2017     &lt;dbl&gt; 42583651, 802656, 80012, 1018935, 478365, 5160…
 ## $ PovertyPercent_2017    &lt;dbl&gt; 13.4, 16.9, 11.1, 14.9, 16.4, 13.3, 10.3, 9.6,…
@@ -167,8 +167,8 @@ glimpse(widerpoverty)</code></pre>
 <h1>Joining/Merging (8 points)</h1>
 <pre class="r"><code>joineddata &lt;- full_join(widerpoverty, widerbirthdeath, by = &quot;Territory&quot;)
 glimpse(joineddata)</code></pre>
-<pre><code>## Observations: 57
-## Variables: 11
+<pre><code>## Rows: 57
+## Columns: 11
 ## $ Territory              &lt;chr&gt; &quot;United States&quot;, &quot;Alabama_S&quot;, &quot;Alaska_W&quot;, &quot;Ari…
 ## $ PovertyCounts_2017     &lt;dbl&gt; 42583651, 802656, 80012, 1018935, 478365, 5160…
 ## $ PovertyPercent_2017    &lt;dbl&gt; 13.4, 16.9, 11.1, 14.9, 16.4, 13.3, 10.3, 9.6,…
@@ -180,10 +180,10 @@ glimpse(joineddata)</code></pre>
 ## $ Fertility_Rate         &lt;dbl&gt; NA, 60.9, 69.3, 58.6, 64.0, 56.2, 54.1, 51.8, …
 ## $ Deaths                 &lt;dbl&gt; NA, 53238, 4411, 57758, 32588, 268189, 38063, …
 ## $ Death_Rate             &lt;dbl&gt; NA, 1092.1, 596.2, 823.2, 1084.7, 678.3, 678.8…</code></pre>
-<pre class="r"><code>joineddata.nona &lt;- joineddata %&gt;% na.omit()
+<pre class="r"><code>joineddata.nona &lt;- joineddata %&gt;% na.omit() 
 glimpse(joineddata.nona)</code></pre>
-<pre><code>## Observations: 51
-## Variables: 11
+<pre><code>## Rows: 51
+## Columns: 11
 ## $ Territory              &lt;chr&gt; &quot;Alabama_S&quot;, &quot;Alaska_W&quot;, &quot;Arizona_W&quot;, &quot;Arkansa…
 ## $ PovertyCounts_2017     &lt;dbl&gt; 802656, 80012, 1018935, 478365, 5160208, 56431…
 ## $ PovertyPercent_2017    &lt;dbl&gt; 16.9, 11.1, 14.9, 16.4, 13.3, 10.3, 9.6, 16.6,…
@@ -199,12 +199,12 @@ glimpse(joineddata.nona)</code></pre>
 </div>
 <div id="wrangling-40-points" class="section level1">
 <h1>Wrangling (40 points)</h1>
-<pre class="r"><code>fertilityrate &lt;- joineddata.nona %&gt;% filter(Fertility_Rate &gt; 
-    65) %&gt;% summarize_all(list(Mean = mean, Stdev = sd, Min = min, 
-    Max = max, Var = var))
+<pre class="r"><code>fertilityrate &lt;- joineddata.nona %&gt;% filter(`Fertility_Rate` &gt; 65) %&gt;% 
+  summarize_all(list(&quot;Mean&quot; = mean, &quot;Stdev&quot; = sd, &quot;Min&quot; = min, 
+  &quot;Max&quot;= max, &quot;Var&quot; = var))
 glimpse(fertilityrate)</code></pre>
-<pre><code>## Observations: 1
-## Variables: 55
+<pre><code>## Rows: 1
+## Columns: 55
 ## $ Territory_Mean               &lt;dbl&gt; NA
 ## $ PovertyCounts_2017_Mean      &lt;dbl&gt; 152371.2
 ## $ PovertyPercent_2017_Mean     &lt;dbl&gt; 10.98
@@ -260,11 +260,12 @@ glimpse(fertilityrate)</code></pre>
 ## $ Fertility_Rate_Var           &lt;dbl&gt; 5.672
 ## $ Deaths_Var                   &lt;dbl&gt; 39295806
 ## $ Death_Rate_Var               &lt;dbl&gt; 26531.85</code></pre>
-<pre class="r"><code>fullstats &lt;- joineddata.nona %&gt;% summarize_all(list(Mean = mean, 
-    Stdev = sd, Min = min, Max = max, Var = var))
+<pre class="r"><code>fullstats &lt;- joineddata.nona %&gt;% 
+  summarize_all(list(&quot;Mean&quot; = mean, &quot;Stdev&quot; = sd, &quot;Min&quot; = min, 
+  &quot;Max&quot;= max, &quot;Var&quot; = var))
 glimpse(fullstats)</code></pre>
-<pre><code>## Observations: 1
-## Variables: 55
+<pre><code>## Rows: 1
+## Columns: 55
 ## $ Territory_Mean               &lt;dbl&gt; NA
 ## $ PovertyCounts_2017_Mean      &lt;dbl&gt; 861283.6
 ## $ PovertyPercent_2017_Mean     &lt;dbl&gt; 13.73333
@@ -320,11 +321,11 @@ glimpse(fullstats)</code></pre>
 ## $ Fertility_Rate_Var           &lt;dbl&gt; 44.95452
 ## $ Deaths_Var                   &lt;dbl&gt; 3083803952
 ## $ Death_Rate_Var               &lt;dbl&gt; 19103.13</code></pre>
-<pre class="r"><code>fullstats1 &lt;- joineddata.nona %&gt;% separate(Territory, into = c(&quot;Territory&quot;, 
-    &quot;Region&quot;), sep = &quot;_&quot;, convert = T)
+<pre class="r"><code>fullstats1 &lt;- joineddata.nona %&gt;% 
+  separate(Territory, into = c(&quot;Territory&quot;, &quot;Region&quot;), sep = &quot;_&quot;, convert = T) 
 glimpse(fullstats1)</code></pre>
-<pre><code>## Observations: 51
-## Variables: 12
+<pre><code>## Rows: 51
+## Columns: 12
 ## $ Territory              &lt;chr&gt; &quot;Alabama&quot;, &quot;Alaska&quot;, &quot;Arizona&quot;, &quot;Arkansas&quot;, &quot;C…
 ## $ Region                 &lt;chr&gt; &quot;S&quot;, &quot;W&quot;, &quot;W&quot;, &quot;S&quot;, &quot;W&quot;, &quot;W&quot;, &quot;N&quot;, &quot;S&quot;, &quot;S&quot;, &quot;…
 ## $ PovertyCounts_2017     &lt;dbl&gt; 802656, 80012, 1018935, 478365, 5160208, 56431…
@@ -337,11 +338,12 @@ glimpse(fullstats1)</code></pre>
 ## $ Fertility_Rate         &lt;dbl&gt; 60.9, 69.3, 58.6, 64.0, 56.2, 54.1, 51.8, 48.8…
 ## $ Deaths                 &lt;dbl&gt; 53238, 4411, 57758, 32588, 268189, 38063, 3131…
 ## $ Death_Rate             &lt;dbl&gt; 1092.1, 596.2, 823.2, 1084.7, 678.3, 678.8, 87…</code></pre>
-<pre class="r"><code>ratiobirthdeath &lt;- fullstats1 %&gt;% group_by(Region) %&gt;% mutate(Ratio_Births_to_Deaths = Births/Deaths) %&gt;% 
-    arrange(Ratio_Births_to_Deaths)
+<pre class="r"><code>ratiobirthdeath &lt;- fullstats1 %&gt;% group_by(Region) %&gt;%
+  mutate(&quot;Ratio_Births_to_Deaths&quot; = Births/Deaths) %&gt;% 
+  arrange(Ratio_Births_to_Deaths)
 glimpse(ratiobirthdeath)</code></pre>
-<pre><code>## Observations: 51
-## Variables: 13
+<pre><code>## Rows: 51
+## Columns: 13
 ## Groups: Region [5]
 ## $ Territory              &lt;chr&gt; &quot;Puerto Rico&quot;, &quot;West Virginia&quot;, &quot;Maine&quot;, &quot;Verm…
 ## $ Region                 &lt;chr&gt; &quot;U&quot;, &quot;S&quot;, &quot;N&quot;, &quot;N&quot;, &quot;N&quot;, &quot;N&quot;, &quot;N&quot;, &quot;S&quot;, &quot;S&quot;, &quot;…
@@ -356,12 +358,13 @@ glimpse(ratiobirthdeath)</code></pre>
 ## $ Deaths                 &lt;dbl&gt; 30777, 23276, 14676, 6007, 12504, 135656, 1015…
 ## $ Death_Rate             &lt;dbl&gt; 922.2, 1281.8, 1098.6, 963.2, 931.2, 1059.4, 9…
 ## $ Ratio_Births_to_Deaths &lt;dbl&gt; 0.6961042, 0.7839835, 0.8388525, 0.9042783, 0.…</code></pre>
-<pre class="r"><code>overallbirthdeathstats &lt;- fullstats1 %&gt;% mutate(Ratio_Births_to_Deaths = Births/Deaths) %&gt;% 
-    summarize_all(list(Mean = mean, Stdev = sd, Var = var, Min = min, 
-        Max = max))
+<pre class="r"><code>overallbirthdeathstats &lt;- fullstats1 %&gt;% 
+  mutate(&quot;Ratio_Births_to_Deaths&quot; = Births/Deaths) %&gt;% 
+  summarize_all(list(&quot;Mean&quot; = mean, &quot;Stdev&quot; = sd, &quot;Var&quot; = var, 
+  &quot;Min&quot; = min, &quot;Max&quot; = max))
 glimpse(overallbirthdeathstats)</code></pre>
-<pre><code>## Observations: 1
-## Variables: 65
+<pre><code>## Rows: 1
+## Columns: 65
 ## $ Territory_Mean               &lt;dbl&gt; NA
 ## $ Region_Mean                  &lt;dbl&gt; NA
 ## $ PovertyCounts_2017_Mean      &lt;dbl&gt; 861283.6
@@ -427,25 +430,27 @@ glimpse(overallbirthdeathstats)</code></pre>
 ## $ Deaths_Max                   &lt;dbl&gt; 268189
 ## $ Death_Rate_Max               &lt;dbl&gt; 1281.8
 ## $ Ratio_Births_to_Deaths_Max   &lt;dbl&gt; 2.617632</code></pre>
-<pre class="r"><code>birthdeathstats &lt;- ratiobirthdeath %&gt;% summarize(`Mean of 
-  Ratio_Births_to_Deaths` = mean(Ratio_Births_to_Deaths, 
-    na.rm = T), `Sd of Ratio_Births_to_Deaths` = sd(Ratio_Births_to_Deaths, 
-    na.rm = T), `Min of Ratio_Births_to_Deaths` = min(Ratio_Births_to_Deaths), 
-    `Max of Ratio_Births_to_Deaths` = max(Ratio_Births_to_Deaths))
+<pre class="r"><code>birthdeathstats &lt;- ratiobirthdeath %&gt;% summarize(&quot;Mean of 
+  Ratio_Births_to_Deaths&quot; = mean(Ratio_Births_to_Deaths, na.rm = T), 
+  &quot;Sd of Ratio_Births_to_Deaths&quot; = sd(Ratio_Births_to_Deaths, na.rm = T),
+  &quot;Min of Ratio_Births_to_Deaths&quot; = min(Ratio_Births_to_Deaths), 
+  &quot;Max of Ratio_Births_to_Deaths&quot; = max(Ratio_Births_to_Deaths))
 glimpse(birthdeathstats)</code></pre>
-<pre><code>## Observations: 5
-## Variables: 5
+<pre><code>## Rows: 5
+## Columns: 5
 ## $ Region                               &lt;chr&gt; &quot;M&quot;, &quot;N&quot;, &quot;S&quot;, &quot;U&quot;, &quot;W&quot;
 ## $ `Mean of \n  Ratio_Births_to_Deaths` &lt;dbl&gt; 1.4208986, 1.0922029, 1.2893594,…
 ## $ `Sd of Ratio_Births_to_Deaths`       &lt;dbl&gt; 0.3254556, 0.2050622, 0.2897556,…
 ## $ `Min of Ratio_Births_to_Deaths`      &lt;dbl&gt; 1.0928927, 0.8388525, 0.7839835,…
 ## $ `Max of Ratio_Births_to_Deaths`      &lt;dbl&gt; 2.2985632, 1.4562366, 1.9112192,…</code></pre>
-<pre class="r"><code>fullstats2 &lt;- fullstats1 %&gt;% group_by(Region) %&gt;% summarize_all(list(Mean = mean, 
-    Stdev = sd, Min = min, Max = max, Var = var)) %&gt;% select(-Territory_Mean, 
-    -Territory_Stdev, -Territory_Var)
+<pre class="r"><code>fullstats2&lt;- fullstats1 %&gt;% 
+  group_by(Region) %&gt;% 
+  summarize_all(list(&quot;Mean&quot; = mean, &quot;Stdev&quot; = sd, &quot;Min&quot; = min, 
+  &quot;Max&quot;= max, &quot;Var&quot; = var)) %&gt;% 
+  select(-Territory_Mean, -Territory_Stdev, -Territory_Var)
 glimpse(fullstats2)</code></pre>
-<pre><code>## Observations: 5
-## Variables: 53
+<pre><code>## Rows: 5
+## Columns: 53
 ## $ Region                       &lt;chr&gt; &quot;M&quot;, &quot;N&quot;, &quot;S&quot;, &quot;U&quot;, &quot;W&quot;
 ## $ PovertyCounts_2017_Mean      &lt;dbl&gt; 700239.9, 734462.8, 1103556.2, 1468798.0…
 ## $ PovertyPercent_2017_Mean     &lt;dbl&gt; 12.10000, 10.93333, 15.63125, 44.40000, …
@@ -499,7 +504,7 @@ glimpse(fullstats2)</code></pre>
 ## $ Fertility_Rate_Var           &lt;dbl&gt; 26.53356, 19.80694, 16.01067, NA, 26.883…
 ## $ Deaths_Var                   &lt;dbl&gt; 1592382735, 3173454677, 3148071111, NA, …
 ## $ Death_Rate_Var               &lt;dbl&gt; 5802.633, 10891.582, 25125.970, NA, 1345…</code></pre>
-<pre class="r"><code>corofdata &lt;- joineddata.nona %&gt;% select_if(is.numeric)
+<pre class="r"><code>corofdata &lt;- joineddata.nona %&gt;% select_if(is.numeric) 
 cor(corofdata)</code></pre>
 <pre><code>##                        PovertyCounts_2017 PovertyPercent_2017
 ## PovertyCounts_2017              1.0000000          0.17753578
@@ -550,51 +555,58 @@ cor(corofdata)</code></pre>
 </div>
 <div id="visualizing-30-points" class="section level1">
 <h1>Visualizing (30 points)</h1>
-<pre class="r"><code>tidy &lt;- cor(corofdata) %&gt;% as.data.frame %&gt;% rownames_to_column %&gt;% 
-    pivot_longer(-1, names_to = &quot;name&quot;, values_to = &quot;correlation&quot;)
+<pre class="r"><code>tidy &lt;- cor(corofdata)%&gt;%as.data.frame%&gt;%rownames_to_column%&gt;%
+  pivot_longer(-1,names_to=&quot;name&quot;,values_to=&quot;correlation&quot;)
 glimpse(tidy)</code></pre>
-<pre><code>## Observations: 100
-## Variables: 3
+<pre><code>## Rows: 100
+## Columns: 3
 ## $ rowname     &lt;chr&gt; &quot;PovertyCounts_2017&quot;, &quot;PovertyCounts_2017&quot;, &quot;PovertyCount…
 ## $ name        &lt;chr&gt; &quot;PovertyCounts_2017&quot;, &quot;PovertyPercent_2017&quot;, &quot;PovertyCoun…
 ## $ correlation &lt;dbl&gt; 1.00000000, 0.17753578, 0.99926480, 0.16414142, -0.482695…</code></pre>
-<pre class="r"><code>tidy %&gt;% ggplot(aes(rowname, name, fill = correlation)) + geom_tile() + 
-    scale_fill_gradient2(low = &quot;white&quot;, mid = &quot;orange&quot;, high = &quot;red&quot;) + 
-    geom_text(aes(label = round(correlation, 2))) + geom_text(aes(label = round(correlation, 
-    2))) + xlab(&quot;&quot;) + ylab(&quot;&quot;) + theme(axis.text.x = element_text(angle = 90, 
-    hjust = 1)) + ggtitle(&quot;Heatmap to Examine Correlations between Variables&quot;)</code></pre>
+<pre class="r"><code>tidy%&gt;%ggplot(aes(rowname,name,fill=correlation))+ geom_tile() +
+  scale_fill_gradient2(low=&quot;white&quot;,mid=&quot;orange&quot;,high=&quot;red&quot;) +
+  geom_text(aes(label=round(correlation,2)))+ 
+  geom_text(aes(label= round(correlation, 2))) +
+  xlab(&quot;&quot;) + ylab(&quot;&quot;) + 
+  theme(axis.text.x = element_text(angle=90, hjust=1)) + 
+  ggtitle(&quot;Heatmap to Examine Correlations between Variables&quot;)</code></pre>
 <p><img src="/project1_files/figure-html/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>The heatmap is used to visualize the correlation between different variables. A gradient legend is found on the right hand side to help explain the level of correlation between two different variables, red being the highest correlation. A correlation value closer to 1 is stronger than a correlation value that is closer to 0. Based on this information, it is clear that there is a strong correlation between poverty counts in 2017 and births in 2017, poverty counts in 2018 and births in 2017, poverty counts in 2017 and deaths in 2018, poverty counts in 2018 and deaths in 2018, births in 2017 and deaths in 2018, poverty counts in 2017 and 2018, and poverty percent in 2017 and 2018.</p>
-<pre class="r"><code>ggplot(fullstats2, aes(Births_Max, PovertyCounts_2017_Max, color = Region)) + 
-    geom_point(size = 3) + scale_y_continuous(name = &quot;Maximum Poverty Counts in 2017&quot;, 
-    lim = c(0, 6e+06), breaks = c(0, 5e+05, 1e+06, 1500000, 2e+06, 
-        2500000, 3e+06, 3500000, 4e+06, 4500000, 5e+06, 5500000, 
-        6e+06)) + ggtitle(&quot;Maximum Poverty Counts vs Maximum Births in 2017&quot;) + 
-    scale_x_continuous(name = &quot;Maximum Births in 2017&quot;, lim = c(0, 
-        5e+05), breaks = c(0, 50000, 1e+05, 150000, 2e+05, 250000, 
-        3e+05, 350000, 4e+05, 450000, 5e+05)) + scale_color_manual(name = &quot;Region&quot;, 
-    labels = c(&quot;Northeastern&quot;, &quot;Southern&quot;, &quot;Midwestern&quot;, &quot;US Territories&quot;, 
-        &quot;Western&quot;), values = c(&quot;pink&quot;, &quot;purple&quot;, &quot;magenta&quot;, &quot;light blue&quot;, 
-        &quot;salmon&quot;)) + theme(axis.text.x = element_text(angle = 45, 
-    hjust = 1))</code></pre>
+<pre class="r"><code>ggplot(fullstats2, aes(Births_Max, PovertyCounts_2017_Max, color = Region))+
+  geom_point(size = 3) +
+  scale_y_continuous(name = &quot;Maximum Poverty Counts in 2017&quot;, lim = 
+  c(0,6e+06), breaks = c(0, 5e+05, 1e+06, 1.5e+06, 2e+06, 2.5e+06, 3e+06, 
+  3.5e+06, 4e+06, 4.5e+06, 5e+06, 5.5e+06, 6e+06)) + 
+  ggtitle(&quot;Maximum Poverty Counts vs Maximum Births in 2017&quot;) + 
+  scale_x_continuous(name = &quot;Maximum Births in 2017&quot;, lim = 
+  c(0, 5e+05), breaks = c(0, 50000, 100000, 150000, 200000, 250000, 
+  300000, 350000, 400000, 450000, 500000))+ 
+  scale_color_manual(name = &quot;Region&quot;, labels = c(&quot;Northeastern&quot;, 
+  &quot;Southern&quot;, &quot;Midwestern&quot;, &quot;US Territories&quot;, &quot;Western&quot;), values = 
+  c(&quot;pink&quot;, &quot;purple&quot;,&quot;magenta&quot;, &quot;light blue&quot;, &quot;salmon&quot;))  + 
+  theme(axis.text.x = element_text(angle=45, hjust=1))</code></pre>
 <p><img src="/project1_files/figure-html/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Based on the correlations obtained from the heatmap, the ggplot illustrates the possible relationship between maximum poverty counts in 2017 and maximum births in 2017. Simply from the above graph, the Western regions of the US had the highest maximum birth counts and the highest maximum poverty counts in 2017. Likewise, Midwestern regions of the US had the second greatest maximum birth counts and poverty counts in 2017, and the Northeastern region had the second to last maximum poverty and birth counts in 2017 compared to the other US regions. The Southern region had the third maximum birth counts and poverty counts in 2017, while US Territories such as Puerto Rico had the least maximum birth count but approximately the same maximum poverty counts as the Northeastern region. This plot helps visualize how different regions in the US have different maximum poverty counts and maximum birth counts. It is also clear that the more Western a US state is, the more likely it is to have a higher poverty and birth count, especially in 2017. While it is expected that as the birth counts increases, the poverty counts should also increase, US territories such as Puerto Rico are an exception to this rule.</p>
 <pre class="r"><code>ggplot(fullstats1, aes(x = Territory, y = PovertyCounts_2018, 
-    fill = Region)) + geom_bar(stat = &quot;summary&quot;) + theme(axis.text.x = element_text(angle = 90, 
-    hjust = 1)) + xlab(&quot;US States&quot;) + ylab(&quot;Poverty Counts in 2018&quot;) + 
-    ggtitle(&quot;Poverty Counts in US States in 2018 Based on Region&quot;) + 
-    scale_fill_manual(name = &quot;Region&quot;, labels = c(&quot;Midwestern&quot;, 
-        &quot;Northeastern&quot;, &quot;Southern&quot;, &quot;US Territory&quot;, &quot;Western&quot;), 
-        values = c(&quot;magenta&quot;, &quot;pink&quot;, &quot;purple&quot;, &quot;light blue&quot;, 
-            &quot;salmon&quot;))</code></pre>
+  fill= Region))+
+  geom_bar(stat=&quot;summary&quot;) + 
+  theme(axis.text.x = element_text(angle=90, hjust=1)) + 
+  xlab(&quot;US States&quot;) + 
+  ylab(&quot;Poverty Counts in 2018&quot;) +
+  ggtitle(&quot;Poverty Counts in US States in 2018 Based on Region&quot;)  + 
+  scale_fill_manual(name = &quot;Region&quot;, labels = c(&quot;Midwestern&quot;, 
+  &quot;Northeastern&quot;, &quot;Southern&quot;, &quot;US Territory&quot;, &quot;Western&quot;), 
+  values = c(&quot;magenta&quot;, &quot;pink&quot;, &quot;purple&quot;, &quot;light blue&quot; ,&quot;salmon&quot;))</code></pre>
 <p><img src="/project1_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>The above bar plot details the poverty counts in 2018 based on both state and region. There are 5 different regions as shown in the legend, each containing a group of states or territories. The goal of this plot is to see if there’s a relationship between region and poverty counts in 2018. Overall, California, Texas, Florida, and New York have the highest poverty counts in 2018. This is to be expected since all four states have large populations. While we can pinpoint which states have the highest poverty counts in which region, we cannot be certain of which entire region has the greatest poverty counts in 2018. This is because, for example, in the Western region, California has the highest poverty count, but this does not mean that all of the states in this region have high poverty counts. This bar chart clearly indicates which states of different US regions have the highest poverty counts in 2018. The Western state with the highest poverty count in 2018 is California. Likewise, the Northeastern state with the highest poverty count in 2018 is New Mexico. The Southern state with the highest poverty count is Texas followed by Florida. Overall, it seems as though the Midwestern states all have relatively lower poverty counts compared to other US regions. In addition, the only US territory on this bar graph is Puerto Rico, which has a relatively lower poverty count compared to Texas, Florida, California, and other highly populous states.</p>
-<pre class="r"><code>ggplot(fullstats1, aes(Territory, Births)) + geom_point(size = 2, 
-    aes(color = Deaths)) + scale_color_gradient(low = &quot;light pink&quot;, 
-    high = &quot;magenta&quot;) + theme(axis.text.x = element_text(angle = 90, 
-    hjust = 1)) + xlab(&quot;US States&quot;) + ylab(&quot;Births in 2017&quot;) + 
-    ggtitle(&quot;Birth Counts in 2017 Relationship with Death Counts in 2018 
-  Per US State&quot;)</code></pre>
+<pre class="r"><code>ggplot(fullstats1, aes(Territory,Births))+
+  geom_point(size=2,aes(color= Deaths))+
+  scale_color_gradient(low=&quot;light pink&quot;, high=&quot;magenta&quot;) + 
+  theme(axis.text.x = element_text(angle=90, hjust=1)) + 
+  xlab(&quot;US States&quot;) + 
+  ylab(&quot;Births in 2017&quot;) + 
+  ggtitle(&quot;Birth Counts in 2017 Relationship with Death Counts in 2018 
+  Per US State&quot;)  </code></pre>
 <p><img src="/project1_files/figure-html/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>This scatterplot examines the relationship between birth counts in 2017 and death counts in 2018 for various states and Puerto Rico, a US territory. In general, the main trend that is clear in this scatterplot is that the greater the birth counts in 2017, the greater the death counts in 2018. The states with the highest birth counts also were the states that had the highest death counts the subsequent year. This makes sense because larger, highly populous states are likely to have high birth counts as well as high death counts. The states with very high birth and death counts were California, Texas, New York, and Florida; these are also the states that are highly populated.</p>
 </div>
@@ -603,42 +615,39 @@ glimpse(tidy)</code></pre>
 <pre class="r"><code>library(cluster)
 library(GGally)
 
-# helps generate silhouette values for different k values
-# from 2 to 10 for four numeric variables in select()
-silhouette &lt;- vector()
-for (i in 2:10) {
-    pamdat &lt;- fullstats1 %&gt;% select(PovertyPercent_2017, PovertyPercent_2018, 
-        Births, Deaths) %&gt;% pam(i)
-    silhouette[i] &lt;- pamdat$silinfo$avg.width
-}
+#helps generate silhouette values for different k values from 2 to 10 for four numeric variables in select()
+silhouette&lt;-vector()
+for(i in 2:10){
+pamdat &lt;- fullstats1%&gt;%select(PovertyPercent_2017, 
+  PovertyPercent_2018, Births,Deaths)%&gt;%pam(i)
+silhouette[i] &lt;- pamdat$silinfo$avg.width
+} 
 
-# plots silhouette for each k value to determine the cluster
-# number to choose
-ggplot() + geom_line(aes(x = 1:10, y = silhouette)) + scale_x_continuous(name = &quot;k&quot;, 
-    breaks = 1:10)</code></pre>
+#plots silhouette for each k value to determine the cluster number to choose 
+ggplot()+geom_line(aes(x=1:10,y=silhouette))+
+  scale_x_continuous(name=&quot;k&quot;,breaks=1:10)</code></pre>
 <p><img src="/project1_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code># used the cluster number of k=2 to generate clusters for
-# four variables and assigned to pam1
-pam1 &lt;- fullstats1 %&gt;% select(PovertyPercent_2017, PovertyPercent_2018, 
-    Births, Deaths) %&gt;% pam(k = 2)
+<pre class="r"><code>#used the cluster number of k=2 to generate clusters for four variables and assigned to pam1
+pam1&lt;-fullstats1%&gt;%
+  select(PovertyPercent_2017, PovertyPercent_2018, Births, Deaths)%&gt;% 
+  pam(k=2)
 
-# assigned data with only four numeric variables to pam3
-pam3 &lt;- fullstats1 %&gt;% select(PovertyPercent_2017, PovertyPercent_2018, 
-    Births, Deaths)
+#assigned data with only four numeric variables to pam3
+pam3&lt;- fullstats1 %&gt;% 
+  select(PovertyPercent_2017, PovertyPercent_2018, Births, Deaths)
 
-# gets visual of the pairwise combination of four numeric
-# variables with 2 clusters
-pam3 %&gt;% mutate(cluster = as.factor(pam1$clustering)) %&gt;% ggpairs(columns = 1:4, 
-    aes(color = cluster))</code></pre>
+#gets visual of the pairwise combination of four numeric variables with 2 clusters 
+pam3 %&gt;% 
+  mutate(cluster=as.factor(pam1$clustering)) %&gt;% 
+  ggpairs(columns = 1:4, aes(color=cluster))</code></pre>
 <p><img src="/project1_files/figure-html/unnamed-chunk-8-2.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code># gets the average silhouette width, shows reasonable
-# structure
-plot(pam1, which = 2)</code></pre>
+<pre class="r"><code>#gets the average silhouette width, shows reasonable structure
+plot(pam1, which=2)</code></pre>
 <p><img src="/project1_files/figure-html/unnamed-chunk-8-3.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code># used to determine which state/territory belongs to which
-# cluster (either 1 or 2)
-clust1and2 &lt;- fullstats1 %&gt;% mutate(cluster = as.factor(pam1$clustering)) %&gt;% 
-    select(Territory, cluster, everything())
+<pre class="r"><code>#used to determine which state/territory belongs to which cluster (either 1 or 2)
+clust1and2&lt;- fullstats1%&gt;% 
+  mutate(cluster=as.factor(pam1$clustering))%&gt;%
+  select(Territory,cluster,everything())
 head(clust1and2)</code></pre>
 <pre><code>## # A tibble: 6 x 13
 ##   Territory cluster Region PovertyCounts_2… PovertyPercent_… PovertyCounts_2…
