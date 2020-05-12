@@ -27,7 +27,7 @@ def kmer(sequence, k):
         if rf not in counts:
             counts[rf]=0
         counts[rf]+=1
-    return counts ![](/blog/2020-05-11-python-blog_files/DNA.jpg)
+    return counts
 
 kmer(r.nt, 3)  
 
