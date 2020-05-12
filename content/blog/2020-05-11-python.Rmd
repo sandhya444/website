@@ -2,6 +2,7 @@
 title: "Python"
 author: "Sandhya Srinivasa"
 date: '2020-05-11'
+output: pdf_document
 description: ''
 slug: python
 tags: []
