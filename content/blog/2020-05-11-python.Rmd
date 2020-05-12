@@ -1,17 +1,16 @@
 ---
-title: Python Blog
-author: 'Sandhya Srinivasa '
+title: "Python"
+author: "Sandhya Srinivasa"
 date: '2020-05-11'
-slug: python-blog
-categories: []
-tags: []
 description: ''
+slug: python
+tags: []
+categories: []
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(collapse = TRUE)
 ```
-
 
 ```{r}
 library(reticulate)
@@ -19,8 +18,6 @@ library(reticulate)
 nt <- "CAGCCCAATCAGGCTCTACTGCCACTAAACTTACGCAGGATATATTTACGCCGACGTACT"
 
 ```
-
-
 
 ```{python}
 

@@ -1,11 +1,14 @@
 ---
-title: Python Blog
-author: 'Sandhya Srinivasa '
+title: 'Python '
+author: "Sandhya Srinivasa"
 date: '2020-05-11'
-slug: python-blog
-categories: []
-tags: []
+output:
+  html_document:
+    df_print: paged
 description: ''
+slug: python
+tags: []
+categories: []
 ---
 
 ```{r setup, include=FALSE}
