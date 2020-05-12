@@ -53,5 +53,16 @@ My dataset includes GDP, the governor, women’s weekly median earnings, men’s
       <description> library(reticulate) nt &amp;lt;- &amp;quot;CAGCCCAATCAGGCTCTACTGCCACTAAACTTACGCAGGATATATTTACGCCGACGTACT&amp;quot;  def kmer(sequence, k): counts={} find = len(sequence)-k+1 for i in range(find): rf=sequence[i:i+k] if rf not in counts: counts[rf]=0 counts[rf]+=1 return counts kmer(r.nt, 3) ## {&amp;#39;CAG&amp;#39;: 3, &amp;#39;AGC&amp;#39;: 1, &amp;#39;GCC&amp;#39;: 3, &amp;#39;CCC&amp;#39;: 1, &amp;#39;CCA&amp;#39;: 2, &amp;#39;CAA&amp;#39;: 1, &amp;#39;AAT&amp;#39;: 1, &amp;#39;ATC&amp;#39;: 1, &amp;#39;TCA&amp;#39;: 1, &amp;#39;AGG&amp;#39;: 2, &amp;#39;GGC&amp;#39;: 1, &amp;#39;GCT&amp;#39;: 1, &amp;#39;CTC&amp;#39;: 1, &amp;#39;TCT&amp;#39;: 1, &amp;#39;CTA&amp;#39;: 2, &amp;#39;TAC&amp;#39;: 4, &amp;#39;ACT&amp;#39;: 4, &amp;#39;CTG&amp;#39;: 1, &amp;#39;TGC&amp;#39;: 1, &amp;#39;CAC&amp;#39;: 1, &amp;#39;TAA&amp;#39;: 1, &amp;#39;AAA&amp;#39;: 1, &amp;#39;AAC&amp;#39;: 1, &amp;#39;CTT&amp;#39;: 1, &amp;#39;TTA&amp;#39;: 2, &amp;#39;ACG&amp;#39;: 3, &amp;#39;CGC&amp;#39;: 2, &amp;#39;GCA&amp;#39;: 1, &amp;#39;GGA&amp;#39;: 1, &amp;#39;GAT&amp;#39;: 1, &amp;#39;ATA&amp;#39;: 2, &amp;#39;TAT&amp;#39;: 2, &amp;#39;ATT&amp;#39;: 1, &amp;#39;TTT&amp;#39;: 1, &amp;#39;CCG&amp;#39;: 1, &amp;#39;CGA&amp;#39;: 1, &amp;#39;GAC&amp;#39;: 1, &amp;#39;CGT&amp;#39;: 1, &amp;#39;GTA&amp;#39;: 1} </description>
     </item>
     
+    <item>
+      <title>Resume</title>
+      <link>/resumer/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/resumer/</guid>
+      <description>Biography My name is Sandhya Srinivasa, and I was born in India. I came to the US when I was about a year old, and have been living in Texas ever since.
+ Education I attended Village High School under the IB Diploma program. After graduating highschool, I attended the University of Texas at Austin as a Biology major.
+ Interests Most of my interests are centered around the outdoors.</description>
+    </item>
+    
   </channel>
 </rss>
