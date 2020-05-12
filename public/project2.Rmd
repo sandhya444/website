@@ -359,7 +359,7 @@ After this, I performed the 10-fold CV to get the average out-of-sample accuracy
 
 
 ```{r}
-#library(glmnet)
+library(glmnet)
 newstates <- states %>% select(-state, -net.immigration_c)
 head(newstates)
 newstates$region <- factor(newstates$region)
@@ -369,16 +369,16 @@ x<-model.matrix(gdp~-1+., data = newstates)
 head(x)
 
 #running LASSO regression
-#set.seed(1234)
-#cv_states<-cv.glmnet(x,y)
-#lasso_states<-glmnet(x,y, lambda=cv_states$lambda.1se)
-#coef(lasso_states)
+set.seed(1234)
+cv_states<-cv.glmnet(x,y)
+lasso_states<-glmnet(x,y, lambda=cv_states$lambda.1se)
+coef(lasso_states)
 
-#prob_lasso <- predict(lasso_states, newx = x,type = "response")
-#head(prob_lasso)
+prob_lasso <- predict(lasso_states, newx = x,type = "response")
+head(prob_lasso)
 
 #MSE of the full model 
-#mean((newstates$gdp - prob_lasso)^2)
+mean((newstates$gdp - prob_lasso)^2)
 
 #10-fold CV 
 set.seed(1234)

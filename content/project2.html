@@ -22,8 +22,8 @@ output:
 library(dplyr)
 earnings &lt;- read_excel(&quot;~/Desktop/Project2/earning.xlsx&quot;) 
 glimpse(earnings)</code></pre>
-<pre><code>## Observations: 51
-## Variables: 4
+<pre><code>## Rows: 51
+## Columns: 4
 ## $ state &lt;chr&gt; &quot;Alabama&quot;, &quot;Alaska&quot;, &quot;Arizona&quot;,
 &quot;Arkansas&quot;, &quot;California&quot;, &quot;Colorado&quot;, &quot;Connecticut…
 ## $ women &lt;dbl&gt; 688, 857, 762, 681, 876, 908, 923, 789,
@@ -34,16 +34,16 @@ glimpse(earnings)</code></pre>
 &quot;S&quot;, &quot;S&quot;, &quot;S&quot;, &quot;S&quot;, &quot;W.&quot;, &quot;M_W&quot;, &quot;M_W&quot;, &quot;M…</code></pre>
 <pre class="r"><code>immigration &lt;- read_excel(&quot;~/Desktop/Project2/IMMIGRATION.xlsx&quot;) %&gt;% select(-...2)
 glimpse(immigration)</code></pre>
-<pre><code>## Observations: 51
-## Variables: 2
+<pre><code>## Rows: 51
+## Columns: 2
 ## $ state &lt;chr&gt; &quot;Florida&quot;, &quot;California&quot;, &quot;Texas&quot;, &quot;New
 York&quot;, &quot;Massachusetts&quot;, &quot;Washingto…
 ## $ net.immigration &lt;dbl&gt; 88678, 74028, 65044, 45753,
 28426, 24103, 21284, 19532, 19209, 15053, 150…</code></pre>
 <pre class="r"><code>combined &lt;- full_join(earnings, immigration, by = &quot;state&quot;)
 glimpse(combined)</code></pre>
-<pre><code>## Observations: 51
-## Variables: 5
+<pre><code>## Rows: 51
+## Columns: 5
 ## $ state &lt;chr&gt; &quot;Alabama&quot;, &quot;Alaska&quot;, &quot;Arizona&quot;,
 &quot;Arkansas&quot;, &quot;California&quot;, &quot;Colorado&quot;, &quot;Co…
 ## $ women &lt;dbl&gt; 688, 857, 762, 681, 876, 908, 923, 789,
@@ -56,24 +56,24 @@ glimpse(combined)</code></pre>
 10523, 12323, 73, 2604, 88678, 15053, 5014, …</code></pre>
 <pre class="r"><code>gdp &lt;- read_excel(&quot;~/Desktop/Project2/gdpstate.xlsx&quot;) 
 glimpse(gdp)</code></pre>
-<pre><code>## Observations: 51
-## Variables: 2
+<pre><code>## Rows: 51
+## Columns: 2
 ## $ state &lt;chr&gt; &quot;Alabama&quot;, &quot;Alaska&quot;, &quot;Arizona&quot;,
 &quot;Arkansas&quot;, &quot;California&quot;, &quot;Colorado&quot;, &quot;Connecticut&quot;…
 ## $ gdp &lt;dbl&gt; 221735.5, 54734.1, 348297.1, 128418.9,
 2997732.8, 371749.6, 275726.9, 73481.3, 1406…</code></pre>
 <pre class="r"><code>governor&lt;- read_excel(&quot;~/Desktop/Project2/governor.xlsx&quot;) 
 glimpse(governor)</code></pre>
-<pre><code>## Observations: 51
-## Variables: 2
+<pre><code>## Rows: 51
+## Columns: 2
 ## $ state &lt;chr&gt; &quot;Alabama&quot;, &quot;Alaska&quot;, &quot;Arizona&quot;,
 &quot;Arkansas&quot;, &quot;California&quot;, &quot;Colorado&quot;, &quot;Connectic…
 ## $ governor &lt;chr&gt; &quot;Republican&quot;, &quot;Republican&quot;,
 &quot;Republican&quot;, &quot;Republican&quot;, &quot;Democrat&quot;, &quot;Democrat&quot;, …</code></pre>
 <pre class="r"><code>combined1 &lt;- full_join(gdp, governor, by = &quot;state&quot;)
 glimpse(combined1)</code></pre>
-<pre><code>## Observations: 51
-## Variables: 3
+<pre><code>## Rows: 51
+## Columns: 3
 ## $ state &lt;chr&gt; &quot;Alabama&quot;, &quot;Alaska&quot;, &quot;Arizona&quot;,
 &quot;Arkansas&quot;, &quot;California&quot;, &quot;Colorado&quot;, &quot;Connectic…
 ## $ gdp &lt;dbl&gt; 221735.5, 54734.1, 348297.1, 128418.9,
@@ -82,8 +82,8 @@ glimpse(combined1)</code></pre>
 &quot;Republican&quot;, &quot;Republican&quot;, &quot;Democrat&quot;, &quot;Democrat&quot;, …</code></pre>
 <pre class="r"><code>states &lt;- full_join(combined1, combined, by = &quot;state&quot;)
 glimpse(states)</code></pre>
-<pre><code>## Observations: 51
-## Variables: 7
+<pre><code>## Rows: 51
+## Columns: 7
 ## $ state &lt;chr&gt; &quot;Alabama&quot;, &quot;Alaska&quot;, &quot;Arizona&quot;,
 &quot;Arkansas&quot;, &quot;California&quot;, &quot;Colorado&quot;, &quot;Co…
 ## $ gdp &lt;dbl&gt; 221735.5, 54734.1, 348297.1, 128418.9,
@@ -179,7 +179,7 @@ randgdp</code></pre>
 <pre><code>## [1] -28397.72</code></pre>
 <pre class="r"><code>value &lt;- mean(randomdist&lt; -28397.72|randomdist &gt; 28397.72)
 value</code></pre>
-<pre><code>## [1] 0.9464</code></pre>
+<pre><code>## [1] 0.9474</code></pre>
 <pre class="r"><code>#plot visualizing null dist and test stat
 {hist(randomdist,main=&quot;randomdist&quot;,ylab=&quot;&quot;); abline(v = -28397.72,col=&quot;blue&quot;)}</code></pre>
 <p><img src="/project2_files/figure-html/unnamed-chunk-3-1.png" width="768" style="display: block; margin: auto;" /></p>
@@ -322,9 +322,9 @@ statesresresamp &lt;-replicate(5000, {
 statesresresamp%&gt;%t%&gt;%as.data.frame%&gt;% summarize_all(sd)</code></pre>
 <pre><code>## (Intercept) net.immigration_c regionNE regionS regionW.
 net.immigration_c:regionNE
-## 1 59216.44 7.747107 81958.16 70966.13 76428.53 8.589835
+## 1 59689.09 7.947597 79935.86 71150.98 76951.2 8.806692
 ## net.immigration_c:regionS net.immigration_c:regionW.
-## 1 7.959392 8.109129</code></pre>
+## 1 8.091765 8.312189</code></pre>
 <p>Bootstrapped standard errors can be computed when the assumptions of normality and homoskedasticity are not met.</p>
 <p>The robust standard errors for the intercept, Northeastern region, Southern region, Western region, centered net immigration and Northeastern region interaction, centered net immigration and Southern region interaction, and the centered net immigration and Western region interaction are greater than the computed bootstrapped standard errors for these same variables. Thus, the p-values for these variables after getting the robust standard error are greater than p-values for these same variables after computing the bootstrapped standard errors. On the other hand, the robust standard error for centered net immigration is less than the computed boostrapped standard error for centered net immigration. Thus, the p-value for this variable after getting the robust standard error would be smaller than the p-value for this same variable after computing the boostrapped standard error.</p>
 <p>The original standard errors for the intercept, centered net immigration, Northeastern region, Southern region, Western region, centered net immigration and Northeastern region interaction, centered net immigration and Southern region interaction, and the centered net immigration and Western region interaction are larger than the computed boostrapped standard errors for these variables/interactions. Thus, the p-values for these variables after getting the original standard errors are larger than the p-values after computing bootstrapped standard errors for these variables. This is because as the standard error value increases, the p-value also increases.</p>
@@ -446,8 +446,8 @@ diags&lt;-rbind(diags,class_diag(probs,truth))
 
 #out-of-sample performance
 summarize_all(diags,mean) </code></pre>
-<pre><code>##         acc      sens spec       ppv    auc
-## 1 0.7066667 0.8766667  NaN 0.7416667 0.7875</code></pre>
+<pre><code>##         acc sens spec   ppv   auc
+## 1 0.6866667 0.87  NaN 0.775 0.825</code></pre>
 <p>Unlike a linear regression, a logistic regression is able to predict the odds of a binary categorical variable in this case. Using this, we can now interpret the coefficients.</p>
 <p>Interpretation of coefficients:</p>
 <p>intercept: the odds of a Republican governor for a state with GDP = 0 and women’s weekly median earnings = 0 is 1.006800e+04.</p>
@@ -458,7 +458,7 @@ summarize_all(diags,mean) </code></pre>
 <p>After this, I performed the 10-fold CV to get the average out-of-sample accuracy, sensitivity, and recall. The average out-of-sample accuracy was 0.7066667, average out-of-sample sensitivity was 0.8766667, and the average out-of-sample recall was 0.7416667.</p>
 <p>##Question 6
 <strong>6. (10 pts)</strong> Choose one variable you want to predict (can be one you used from before; either binary or continuous) and run a LASSO regression inputting all the rest of your variables as predictors. Choose lambda to give the simplest model whose accuracy is near that of the best (i.e., <code>lambda.1se</code>). Discuss which variables are retained. Perform 10-fold CV using this model: if response in binary, compare model’s out-of-sample accuracy to that of your logistic regression in part 5; if response is numeric, compare the residual standard error (at the bottom of the summary output, aka RMSE): lower is better fit!</p>
-<pre class="r"><code>#library(glmnet)
+<pre class="r"><code>library(glmnet)
 newstates &lt;- states %&gt;% select(-state, -net.immigration_c)
 head(newstates)</code></pre>
 <pre><code>## # A tibble: 6 x 6
@@ -484,18 +484,34 @@ regionS regionW. net.immigration
 ## 5 1 0 876 992 0 0 1 74028
 ## 6 1 0 908 1069 0 0 1 10523</code></pre>
 <pre class="r"><code>#running LASSO regression
-#set.seed(1234)
-#cv_states&lt;-cv.glmnet(x,y)
-#lasso_states&lt;-glmnet(x,y, lambda=cv_states$lambda.1se)
-#coef(lasso_states)
-
-#prob_lasso &lt;- predict(lasso_states, newx = x,type = &quot;response&quot;)
-#head(prob_lasso)
-
-#MSE of the full model 
-#mean((newstates$gdp - prob_lasso)^2)
-
-#10-fold CV 
+set.seed(1234)
+cv_states&lt;-cv.glmnet(x,y)
+lasso_states&lt;-glmnet(x,y, lambda=cv_states$lambda.1se)
+coef(lasso_states)</code></pre>
+<pre><code>## 9 x 1 sparse Matrix of class &quot;dgCMatrix&quot;
+##                              s0
+## (Intercept)        240661.47684
+## governorDemocrat        .      
+## governorRepublican      .      
+## women                   .      
+## men                     .      
+## regionNE                .      
+## regionS                 .      
+## regionW.                .      
+## net.immigration        13.75619</code></pre>
+<pre class="r"><code>prob_lasso &lt;- predict(lasso_states, newx = x,type = &quot;response&quot;)
+head(prob_lasso)</code></pre>
+<pre><code>##          s0
+## 1  278793.6
+## 2  249726.8
+## 3  347712.2
+## 4  244348.1
+## 5 1259004.9
+## 6  385417.9</code></pre>
+<pre class="r"><code>#MSE of the full model 
+mean((newstates$gdp - prob_lasso)^2)</code></pre>
+<pre><code>## [1] 104790509097</code></pre>
+<pre class="r"><code>#10-fold CV 
 set.seed(1234)
 k=10 
 data3&lt;-newstates[sample(nrow(newstates)),] 
@@ -511,7 +527,7 @@ diags3&lt;-mean((test3$gdp-yhat3)^2)
 
 #MSE using 10-fold CV
 mean(diags3)</code></pre>
-<pre><code>## [1] 14361878073</code></pre>
+<pre><code>## [1] 1928096708</code></pre>
 <p>Before running the Lasso regression, it was necessary to remove some variables. The centered net immigration variable was removed because it was used for the linear regression in question 3, but is no longer required for this Lasso regression. I also removed the state variable because I did not want all of the states to show up when running the Lasso regression. Instead, I kept the regions variable, which contains all of the states.</p>
 <p>The Lasso regression helps determine what variables to retain. This is important because it gives us insight into which explanatory variables are very good predictors of GDP, in this case. From the Lasso regression, it is clear that the only retained variable is net immigration.</p>
 <p>The 10-fold CV was performed using net immigration as the only predictor for GDP. Because we have chosen the only variable that best predicts GDP, it makes sense that this 10-fold CV should provide better predictions. Overall, the MSE from the prediction using this 10-fold CV was smaller than the MSE from the full model. Becuase the 10-fold CV produced a smaller MSE, it is a much better fit. It makes sense that this 10-fold CV with only one important predictor would provide a better fit than a model that uses all predictors.</p>
