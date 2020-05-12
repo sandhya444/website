@@ -3,6 +3,7 @@ title: "Python"
 author: "Sandhya Srinivasa"
 date: "YYYY-MM-DD"
 output:
+  pdf_document: default
   html_document:
     df_print: paged
 description: ''
@@ -15,6 +16,12 @@ categories: []
 knitr::opts_chunk$set(collapse = TRUE)
 ```
 
+
+![](/blog/2020-05-11-python_files/DNA1.jpg)
+
+The above image shows the structure of DNA, a double helix.  DNA plays a major role in our body because we use it as a template to make RNA.  This can be done through transcription and translation, and, during translation, a codon codes for each amino acid in the polypeptide.  A codon is a three bases/nucleotides in DNA.  This is why we will be examining k-mers.  
+
+Using R I was able to do the following: 
 ```{r}
 library(reticulate)
 
@@ -22,6 +29,7 @@ nt <- "CAGCCCAATCAGGCTCTACTGCCACTAAACTTACGCAGGATATATTTACGCCGACGTACT"
 
 ```
 
+Using python I was able to do the following: 
 ```{python}
 
 def kmer(sequence, k):
@@ -35,6 +43,5 @@ def kmer(sequence, k):
     return counts
 
 kmer(r.nt, 3)  
-
 ```
 
