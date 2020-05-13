@@ -1,7 +1,7 @@
 ---
 title: "Python"
 author: "Sandhya Srinivasa"
-date: "YYYY-MM-DD"
+date: "2020-05-12"
 output:
   pdf_document: default
   html_document:
@@ -19,29 +19,66 @@ knitr::opts_chunk$set(collapse = TRUE)
 
 ![](/blog/2020-05-11-python_files/DNA1.jpg)
 
-The above image shows the structure of DNA, a double helix.  DNA plays a major role in our body because we use it as a template to make RNA.  This can be done through transcription and translation, and, during translation, a codon codes for each amino acid in the polypeptide.  A codon is a three bases/nucleotides in DNA.  This is why we will be examining k-mers.  
+The above image shows the structure of DNA, a double stranded nucleic acid.  Today, we will start off by examining k-mers and how to calculate it for a sequence using python.  After this, we will examine how to find specific bases/sites within these sequences.  
 
-Using R I was able to do the following: 
+K-mers are essentially formed when a sequence is split to form "k" number of bases.  For the sequence "CAGCCCAAT," the 4-mers would be "CAGC," "AGCC," "GCCC," "CCCA," "CCAA," and "CAAT."  Based on this, it is possible to determine the k-mers and its count from a sequence using R and python.  
+
+First, we can use R to assign two different sequences to two separate vectors (seq and seq1).  The reticulate package was used to allow both R and python to interact with one another.  
+
 ```{r}
 library(reticulate)
 
-nt <- "CAGCCCAATCAGGCTCTACTGCCACTAAACTTACGCAGGATATATTTACGCCGACGTACT"
+seq <- "CAGCCCAATCAGGCTCTACTGCCACTAAACTTACGCAGGATATATTTACGCCGACGTACT"
 
+
+seq1 <- "ATGGCAATAACCCCCCGTTTCTACTTCTAGAGGAGAAAAGTATTGACATGAGCGCTCCCGGCACAAGGGCCAAAGAAGTCTCCAATTTCTTATTTCCGAATGACATGCGTCTCCTTGCGGGTAAATCACCGACCGCAATTCATAGAAGCCTGGGGGAACAGATAGGTCTAATTAGCTTAAGAGAGTAAATCCTGGGATCATTCAGTAGTAACCATAAACTTACGCTGGGGCTTCTTCGGCGGATTTTTACAGTTACCAACCAGGAGATTTGAAGTAAATCAGTTGAGGATTTAGCCGCGCTATCCGGTAATCTCCAAATTAAAACATACCGTTCCATGAAGGCTAGAATTACTTACCGGCCTTTTCCATGCCTGCGCTATACCCCCCCACTCTCCCGCTTATCCGTCCGAGCGGAGGCAGTGCGATCCTCCGTTAAGATATTCTTACGTGTGACGTAGCTATGTATTTTGCAGAGCTGGCGAACGCGTTGAACACTTCACAGATGGTAGGGATTCGGGTAAAGGGCGTATAATTGGGGACTAACATAGGCGTAGACTACGATGGCGCCAACTCAATCGCAGCTCGAGCGCCCTGAATAACGTACTCATCTCAACTCATTCTCGGCAATCTACCGAGCGACTCGATTATCAACGGCTGTCTAGCAGTTCTAATCTTTTGCCAGCATCGTAATAGCCTCCAAGAGATTGATGATAGCTATCGGCACAGAACTGAGACGGCGCCGATGGATAGCGGACTTTCGGTCAACCACAATTCCCCACGGGACAGGTCCTGCGGTGCGCATCACTCTGAATGTACAAGCAACCCAAGTGGGCCGAGCCTGGACTCAGCTGGTTCCTGCGTGAGCTCGAGACTCGGGATGACAGCTCTTTAAACATAGAGCGGGGGCGTCGAACGGTCGAGAAAGTCATAGTACCTCGGGTACCAACTTACTCAGGTTATTGCTTGAAGCTGTACTATTTTAGGGGGGGAGCGCTGAAGGTCTCTTCTTCTCATGACTGAACTCGCGAGGGTCGTGAAGTCGGTTCCTTCAATGGTTAAAAAACAAAGGCTTACTGTGCGCAGAGGAACGCCCATCTAGCGGCTGGCGTCTTGAATGCTCGGTCCCCTTTGTCATTCCGGATTAATCCATTTCCCTCATTCACGAGCTTGCGAAGTCTACATTGGTATATGAATGCGACCTAGAAGAGGGCGCTTAAAATTGGCAGTGGTTGATGCTCTAAACTCCATTTGGTTTACTCGTGCATCACCGCGATAGGCTGACAAAGGTTTAACATTGAATAGCAAGGCACTTCCGGTCTCAATGAACGGCCGGGAAAGGTACGCGCGCGGTATGGGAGGATCAAGGGGCCAATAGAGAGGCTCCTCTCTCACTCGCTAGGAGGCAAATGTAAAACAATGGTTACTGCATCGATACATAAAACATGTCCATCGGTTGCCCAAAGTGTTAAGTGTCTATCACCCCTAGGGCCGTTTCCCGCATATAAACGCCAGGTTGTATCCGCATTTGATGCTACCGTGGATGAGTCTGCGTCGAGCGCGCCGCACGAATGTTGCAATGTATTGCATGAGTAGGGTTGACTAAGAGCCGTTAGATGCGTCGCTGTACTAATAGTTGTCGACAGACCGTCGAGATTAGAAAATGGTACCAGCATTTTCGGAGGTTCTCTAACTAGTATGGATTGCGGTGTCTTCACTGTGCTGCGGCTACCCATCGCCTGAAATCCAGCTGGTGTCAAGCCATCCCCTCTCCGGGACGCCGCATGTAGTGAAACATATACGTTGCACGGGTTCACCGCGGTCCGTTCTGAGTCGACCAAGGACACAATCGAGCTCCGATCCGTACCCTCGACAAACTTGTACCCGACCCCCGGAGCTTGCCAGCTCCTCGGGTATCATGGAGCCTGTGGTTCATCGCGTCCGATATCAAACTTCGTCATGATAAAGTCCCCCCCTCGGGAGTACCAGAGAAGATGACTACTGAGTTGTGCGAT"
 ```
 
-Using python I was able to do the following: 
+
+Now, we must create a function to calculate the k-mers and its count in the sequence.  That is, for the sequence "CTACTA," the 3-mer "CTA" is found two times in the sequence, whereas the other 3-mers, such as "TAC" and "ACT," are only found one time.  
+
+As shown below, we start by using python to define the function as "findkmer."  Then, we create the dictionary "counts."  For a chosen k=3 (that is, 3-mer) for the sequence "CTACTA," this dictionary will be able to store all of the 3-mers from this sequence and how many times these 3-mers are repeated throughout the sequence.  Based on the previous example sequence, the dictionary will store this information in the format {"CTA:2, TAC:1, ACT:1}.  Then, for a specific sequence, we have to find out the total number of kmers based on the chosen k value.  This can be done by first finding the length of the sequence, subtracting by the chosen k value, and then adding 1.  Now, we can perform a loop to find the k-mers, enter them into the "counts" dictionary, and add 1 to the count if it is repeated in the sequence.  By doing so, the k-mer will not get repeated in the dictionary but will instead be added to the count.  Lastly, we will return the stored information containing the counts and the k-mers from the dictionary.  
+
 ```{python}
-
-def kmer(sequence, k):
+def findkmer(sequence, k):
     counts={}
-    find = len(sequence)-k+1 
-    for i in range(find):
-        rf=sequence[i:i+k]
-        if rf not in counts:
-            counts[rf]=0
-        counts[rf]+=1
+    number = len(sequence)-k+1 
+    for i in range(number):
+        find_kmer=sequence[i:i+k]
+        if find_kmer not in counts:
+            counts[find_kmer]=0
+        counts[find_kmer]+=1
     return counts
-
-kmer(r.nt, 3)  
 ```
 
+We can use the previous function to find the 3-mers and the number of times it is repeated in the sequence "seq."
+```{python}
+findkmer(r.seq, 3)  
+```
+
+Now, we can use the previous function to find the 4-mers and the number of times it is repeated in the sequence "seq1."  
+
+```{python}
+findkmer(r.seq1, 4)
+```
+
+Now that we have discussed k-mers, we can also use python to find specific bases/sites in a chosen sequence.  This is important especially when dealing with restriction enzymes.  Restriction enzymes only can cut at specific sites, so determining the total number of these sites present in the sequence can tell us how many fragments are produced from using this restriction enzyme on this sequence.  Using python can be an important tool for this because it can be difficult to manually determine how many sites there are for a sequence with thousands of bases.  
+
+In order to determine specific bases/sites in a chosen sequence, we will be using regular expressions (regex) in python.  Regular expressions can take what you want to look for in a sequence, in this case, and then it can detect any matches.  "Re.findall()" can look for the specific bases you want to find in a sequence and return all of the times these specific bases were found.  
+
+Below, we will use re.findall() to find the number of sites there are for a restriction enzyme that cuts at "A.TAAT" in "seq1."  The "." signifies that either A,T,C, or G can be present at this spot for this restriction enzyme.  Based on the output, it is clear that there are two times that this is found in the sequence; thus, the restriction enzyme can cut at both sites. 
+
+```{python}
+import re
+
+re.findall(r"A.TAAT", r.seq1)
+```
+
+
+Again, we will use re.findall() to find the number of sites there are in "seq1" for a restriction enzyme that cuts at "GC[AG][AT]TG."  In this case, the [AG] means that either A or G can be present at this spot, and the [AT] means that either A or T can be present at this spot.  Based on the output, it is clear that, once again, there are two times that this site is found in the sequence.  Thus, this restriction enzyme can cut at both sites.  
+
+```{python}
+re.findall(r"GC[AG][AT]TG", r.seq1)
+```
+
+Knowing this, if both restriction enzymes that cut at "A.TAAT" and "GC[AG][AT]TG" respectiively were introduced to the same sequence to cut, then we can determine overall how many cuts these two restriction enzymes make.  Overall, it is clear that each restriction enzyme makes two cuts in "seq1" at their specific sites; this means that there are a total of 4 cuts in "seq1."  Because there are a total of 4 cuts, "seq1" would be split into 5 fragments by the two restriction enzymes.  

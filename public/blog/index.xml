@@ -6,6 +6,7 @@
     <description>Recent content in Blogs on Portfolio</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-US</language>
+    <lastBuildDate>Tue, 12 May 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/blog/index.xml" rel="self" type="application/rss+xml" />
     
@@ -13,11 +14,11 @@
     <item>
       <title>Python</title>
       <link>/blog/python/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <pubDate>Tue, 12 May 2020 00:00:00 +0000</pubDate>
       
       <guid>/blog/python/</guid>
-      <description>The above image shows the structure of DNA, a double helix. DNA plays a major role in our body because we use it as a template to make RNA. This can be done through transcription and translation, and, during translation, a codon codes for each amino acid in the polypeptide. A codon is a three bases/nucleotides in DNA. This is why we will be examining k-mers.
-Using R I was able to do the following:</description>
+      <description>The above image shows the structure of DNA, a double stranded nucleic acid. Today, we will start off by examining k-mers and how to calculate it for a sequence using python. After this, we will examine how to find specific bases/sites within these sequences.
+K-mers are essentially formed when a sequence is split to form “k” number of bases. For the sequence “CAGCCCAAT,” the 4-mers would be “CAGC,” “AGCC,” “GCCC,” “CCCA,” “CCAA,” and “CAAT.</description>
     </item>
     
   </channel>
