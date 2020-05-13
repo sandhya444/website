@@ -22,6 +22,7 @@ theme = "hugo-sustain"
 [params.social]
   Email         = "ssandhya.444@gmail.com"
   Linkedin = "sandhya-srinivasa-17b334133/"
+  Github = "sandhya444"
 
 ## Main Menu
 [[menu.main]]
