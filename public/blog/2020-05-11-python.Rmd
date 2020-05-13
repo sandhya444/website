@@ -82,3 +82,6 @@ re.findall(r"GC[AG][AT]TG", r.seq1)
 ```
 
 Knowing this, if both restriction enzymes that cut at "A.TAAT" and "GC[AG][AT]TG" respectiively were introduced to the same sequence to cut, then we can determine overall how many cuts these two restriction enzymes make.  Overall, it is clear that each restriction enzyme makes two cuts in "seq1" at their specific sites; this means that there are a total of 4 cuts in "seq1."  Because there are a total of 4 cuts, "seq1" would be split into 5 fragments by the two restriction enzymes.  
+
+Image Reference: 
+https://www.newscientist.com/term/dna/
