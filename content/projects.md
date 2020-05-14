@@ -11,6 +11,6 @@ title: Projects
 
 Here are some projects I have recently completed:
 
-- [Project 1: Exploratory Data Analysis with Tidyverse Tools](/project1/)
+- [Project 1: Data Wrangling and Exploratory Analysis](/project1/)
 
-- [Project 2: Modeling, Testing, and Classification](/project2/)
+- [Project 2: Modeling, Interference, Prediction](/project2/)
